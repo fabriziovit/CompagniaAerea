@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "sqlite3.h"
 #include "graph.h"
-
+#include <string.h>
+#define MAX 100
 sqlite3 *db;
 
 //funzione per vedere se esiste la tabella e quindi il database
@@ -113,9 +114,10 @@ void creaDatabase(){
         }
         else {
             //creazione tabelle
-            //sql = "CREATE TABLE IF NOT EXISTS UTENTI( CF TEXT PRIMARY KEY NOT NULL, PASSWORD TEXT NOT NULL, TIPO TEXT NOT NULL);"
-                  "CREATE TABLE IF NOT EXISTS PRESTITI( PRATICA INT PRIMARY KEY AUTOINCREMENT, MATRICOLA TEXT , ID INT;"
-                  "CREATE TABLE IF NOT EXISTS RICHIESTE(NRICHIESTA INTEGER PRIMARY KEY AUTOINCREMENT, MATRICOLA TEXT NOT NULL, ID INT NOT NULL;";
+            //sql = "CREATE TABLE IF NOT EXISTS UTENTI( CF TEXT PRIMARY KEY NOT NULL, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL);"
+                  "CREATE TABLE IF NOT EXISTS AEREOPORTO( CODAEREO TEXT PRIMARY KEY, CITTA TEXT);"
+                  "CREATE TABLE IF NOT EXISTS TRATTE( TRATTA INT PRIMARY KEY AUTOINCREMENT, AEREOPART TEXT NOT NULL, AEREODEST TEXT NOT NULL, KM INT NOT NULL;"
+                  "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEREOPART TEXT NOT NULL, AEREODEST TEXT NOT NULL) ;";
             rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
             if (rc != SQLITE_OK) {
                 printf("SQL error: %s\n", zErrMsg);
@@ -130,6 +132,9 @@ void creaDatabase(){
 }
 
 int main() {
+    char username[MAX];
+    char nome[MAX], cognome[MAX];
+    char password[33];
     int scelta = 1;
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
@@ -142,9 +147,26 @@ int main() {
             printf("Riprova! Hai inserito un numero non valido.\n");
         }
         scanf("%d", &scelta);
+        getchar();
         switch (scelta) {
             case 1:
-                //Effettuare registrazione e salvataggio nel db
+                printf("Inserisci il tuo nome:\n");
+                gets(nome);
+
+                printf("Inserisci il tuo cognome:\n");
+                gets(cognome);
+
+                printf("Scegli il tuo username:\n");
+                gets(username);
+
+                printf("Scegli una password(da 4 a 32 caratteri):\n");
+                do {
+                    gets(password);
+                    if(strlen(password)<4 || strlen(password)>32)
+                        printf("La password non rispetta la lunghezza!\nReinserisci una password che rispetta la lunghezza:\n");
+                }while (strlen(password)<4 || strlen(password)>32);
+                printf("URrra\n");
+                //salvataggio nel db
                 break;
             case 2:
                 //Effettuare il login e controllo se utente o amministratore
