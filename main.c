@@ -114,9 +114,9 @@ void creaDatabase(){
         }
         else {
             //creazione tabelle
-            //sql = "CREATE TABLE IF NOT EXISTS UTENTI( CF TEXT PRIMARY KEY NOT NULL, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL);"
+            sql = "CREATE TABLE IF NOT EXISTS UTENTI(USERNAME TEXT PRIMARY KEY, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL);"
                   "CREATE TABLE IF NOT EXISTS AEREOPORTO(CODAEREO TEXT PRIMARY KEY, CITTA TEXT);"
-                  "CREATE TABLE IF NOT EXISTS TRATTE( TRATTA INT PRIMARY KEY AUTOINCREMENT, AEREOPART TEXT NOT NULL, AEREODEST TEXT NOT NULL, KM INT NOT NULL;"
+                  "CREATE TABLE IF NOT EXISTS TRATTE(TRATTA INTEGER PRIMARY KEY AUTOINCREMENT, AEREOPART TEXT NOT NULL, AEREODEST TEXT NOT NULL, KM INT NOT NULL);"
                   "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEREOPART TEXT NOT NULL, AEREODEST TEXT NOT NULL) ;";
             rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
             if (rc != SQLITE_OK) {
@@ -124,11 +124,47 @@ void creaDatabase(){
                 sqlite3_free(zErrMsg);
                 sqlite3_close(db);
                 exit(-1);
-            } else {
-                printf("Tabella creata con successo!\n");
             }
         }
     }
+}
+
+void EffettuaRegistrazione(char username[], char nome[], char cognome[], char password[]){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "INSERT INTO UTENTI(USERNAME, PASSWORD ,NOME , COGNOME, TIPO) VALUES(?1, ?2, ?3, ?4, 'Utente');";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, nome, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, cognome, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        printf("Exit");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+    printf("Registrazione effettuata correttamente!\n");
+}
+
+int EffettuaAccesso(char username[], char password[]){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT TIPO FROM UTENTI WHERE USERNAME = ?1 AND PASSWORD = ?2;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if(rc == SQLITE_ROW) {
+        if(strcmp(sqlite3_column_text(stmt, 0),"Utente") == 0)
+            return 1;
+        else if(strcmp(sqlite3_column_text(stmt, 0),"Admin") == 0)
+            return 2;
+    }
+    return 0;
 }
 
 int main() {
@@ -136,6 +172,8 @@ int main() {
     char nome[MAX], cognome[MAX];
     char password[33];
     int scelta = 1;
+
+    creaDatabase();
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
         if ((scelta > 0) && (scelta < 3)) {
@@ -152,28 +190,91 @@ int main() {
             case 1:
                 printf("Inserisci il tuo nome:\n");
                 gets(nome);
-
                 printf("Inserisci il tuo cognome:\n");
                 gets(cognome);
-
                 printf("Scegli il tuo username:\n");
                 gets(username);
-
                 printf("Scegli una password(da 4 a 32 caratteri):\n");
                 do {
                     gets(password);
                     if(strlen(password)<4 || strlen(password)>32)
                         printf("La password non rispetta la lunghezza!\nReinserisci una password che rispetta la lunghezza:\n");
                 }while (strlen(password)<4 || strlen(password)>32);
-                printf("URrra\n");
+                EffettuaRegistrazione(username, nome, cognome, password);
                 //salvataggio nel db
                 break;
             case 2:
-                //Effettuare il login e controllo se utente o amministratore
-                // Utente:
-                // poter scegliere e visualizzare i voli
-                //Admin:
-                //poter inserire o rimuovere tratte o voli con scali
+                do{
+                    //Effettuare il login e controllo se utente o amministratore
+                    printf("Inserisci username:\n");
+                    gets(username);
+                    printf("Inserisci password:\n");
+                    gets(password);
+                    if(EffettuaAccesso(username, password) == 0){
+                        printf("username/password errate!Riprova.\n");
+                    } else if(EffettuaAccesso(username, password) == 1) {
+                        int sceltaUtente = 1;
+                        printf("%s ha effettuato correttamente l'accesso!\n", username);
+                        //poter scegliere e visualizzare i voli
+                        do {
+                            if ((scelta > 0) && (scelta < 4)) {
+                                printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                                printf("1. Visualizza voli.\n");
+                                printf("2. Prenota un volo.\n");
+                                printf("3. Visualizza prenotazioni.\n");
+                                printf("4. Effettuare il Logout.\n");
+                            } else {
+                                printf("Riprova! Hai inserito un numero non valido.\n");
+                            }
+                            scanf("%d", &sceltaUtente);
+                            getchar();
+                            switch (scelta) {
+                                case 1:
+                                    //visualizzare tutti i voli
+                                    break;
+                                case 2:
+                                    //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
+                                    //Oppure scegliere gli algoritmi, piu economico, piu veloce
+                                    break;
+                                case 3:
+                                    //visualizzare tutte le prenotazioni effettuate
+                                    break;
+                            }
+                        }while(scelta != 4);
+                    }else if(EffettuaAccesso(username, password) == 2){
+                        int sceltaAdmin = 1;
+                        printf("L'admin %s ha effettuato correttamente l'accesso!\n", username);
+                        do {
+                            if ((scelta > 0) && (scelta < 5)) {
+                                printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                                printf("1. Visualizza voli.\n");
+                                printf("2. Aggiungere nuovi aereporti.\n");
+                                printf("3. Aggiungere nuovo volo.\n");
+                                printf("4. Rimuovere un volo.\n");
+                                printf("5. Effettuare il Logout.\n");
+                            } else {
+                                printf("Riprova! Hai inserito un numero non valido.\n");
+                            }
+                            scanf("%d", &sceltaAdmin);
+                            getchar();
+                            switch (scelta) {
+                                case 1:
+                                    //visualizzare voli
+                                    break;
+                                case 2:
+                                    //Aggiungere nuovo nodo con funzione creaNodo
+                                    break;
+                                case 3:
+                                    //Aggiungere nuovo arco con funzione Aggiungi
+                                    break;
+                                case 4:
+                                    //Rimuovere un arco con funzione rimuovi
+                                    break;
+                            }
+                        }while(scelta != 5);
+                        //poter inserire o rimuovere tratte o voli con scali
+                    }
+                }while(EffettuaAccesso(username, password) == 0);
                 break;
 
         }
