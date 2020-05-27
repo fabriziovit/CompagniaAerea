@@ -10,7 +10,7 @@ sqlite3 *db;
 int tableExists() {
     sqlite3_stmt *stmt;
     char *sql;
-    sql = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='AEREOPORTI';";
+    sql = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='AEROPORTO';";
     int rc;
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if(rc != SQLITE_OK) {
@@ -30,68 +30,29 @@ int tableExists() {
 }
 
 //funzione per inizializzare le strutture dati
-/*void initStruct() {
+void initStruct(Graph *G) {
     sqlite3_stmt *stmt;
     int rc;
     int index = 0;
 
-    sqlite3_prepare_v2(db, "select * from LIBRI ORDER BY ID ASC;", -1, &stmt, NULL);
-    while((rc = sqlite3_step(stmt)) == SQLITE_ROW)
-        inserisciCoda(L, (char*)sqlite3_column_text(stmt, 1), (char *)sqlite3_column_text(stmt, 2), sqlite3_column_int(stmt, 0), sqlite3_column_int(stmt, 3), 1, -1);
-    sqlite3_finalize(stmt);
-
-
-    sqlite3_prepare_v2(db, "select COUNT(ID) from RICHIESTE GROUP BY ID;", -1, &stmt, NULL);
+    sqlite3_prepare_v2(db, "select COUNT(*) from AEROPORTO;", -1, &stmt, NULL);
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         index++;
     }
     sqlite3_finalize(stmt);
-    if (index > 0) {
-        if (P == NULL) {
-            printf("ERRORE: impossibile allocare memoria per il grafo\n");
-            sqlite3_close(db);
-            exit(-1);
-        } else {
-            P->q = (Queue **) malloc(index * sizeof(Queue *));
-            if ((P->q == NULL) && (index > 0)) {
-                printf("ERRORE: impossibile allocare memoria per la lista del grafo\n");
-                free(P);
-                P = NULL;
-            } else {
-                P->n = index;
-                for (int i = 0; i < index; i++)
-                    P->q[i] = NULL;
-            }
-        }
-    } else {
-        P->n = index;
-        P->q = NULL;
-    }
 
-    index = -1;
-    int libro = -1;
-    char matricola[10];
-
-    sqlite3_prepare_v2(db, "select * from RICHIESTE AS R INNER JOIN LIBRI AS L ON R.ID = L.ID ORDER BY R.ID, R.NRICHIESTA ASC;", -1, &stmt, NULL);
-    while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-        strcpy(matricola, sqlite3_column_text(stmt, 1));
-        if (libro != -1 && libro == sqlite3_column_int(stmt, 2)) {
-            Enqueue(P, index, matricola, 0);
-        }
-        else{
-            if (L) {
-                index++;
-                libro = sqlite3_column_int(stmt, 2);
-                ModificaIndice(L, libro, index);
-                Enqueue(P, index, matricola, 0);
-            }
-        }
-    }
+    G = CreaGrafo(index);
+   //query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
+   // caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
+   //index = naeropo;
+   //km da prendere
+   //Aggiungi(G,cittadestinazione, km, 0, index);
     sqlite3_finalize(stmt);
 }
-*/
+
+
 //funzione che crea il database se non trova il file .db
-void creaDatabase(){
+void creaDatabase(Graph *G){
     char *zErrMsg = 0;
     int rc;
     char *sql;
@@ -110,7 +71,7 @@ void creaDatabase(){
         exit(-1);
     } else {
         if (tableExists() == 1) {
-            //initStruct(Lista,  P);
+            initStruct(G);
         }
         else {
             //creazione tabelle
@@ -172,8 +133,9 @@ int main() {
     char nome[MAX], cognome[MAX];
     char password[33];
     int scelta = 1;
+    Graph *G;
 
-    creaDatabase();
+    creaDatabase(&G);
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
         if ((scelta > 0) && (scelta < 3)) {

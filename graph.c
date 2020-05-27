@@ -21,7 +21,7 @@ Graph *CreaGrafo(int n){
     return(G);
 }
 
-int creaNodo(Graph *G, char *aereoporto,int km, int insert){
+int creaNodo(Graph *G, char *aereoporto, int km, int insert){
     int ind = 0;
     if (G == NULL) {
         printf("ERRORE: impossibile ls lista e vuota\n");
