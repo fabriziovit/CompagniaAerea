@@ -3,8 +3,11 @@
 #include <stdio.h>
 #include "sqlite3.h"
 #include "graph.h"
+#include "list.h"
 #define MAX 100
 sqlite3 *db;
+
+
 
 //funzione per vedere se esiste la tabella e quindi il database
 int tableExists() {
@@ -195,6 +198,7 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
 }
 
 int main() {
+
     char username[MAX];
     char nome[MAX], cognome[MAX];
     char password[33];

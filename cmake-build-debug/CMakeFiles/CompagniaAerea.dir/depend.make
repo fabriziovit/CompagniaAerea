@@ -4,7 +4,12 @@
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../graph.c
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../graph.h
 
+CMakeFiles/CompagniaAerea.dir/list.c.obj: ../list.c
+CMakeFiles/CompagniaAerea.dir/list.c.obj: ../list.h
+CMakeFiles/CompagniaAerea.dir/list.c.obj: ../sqlite3.h
+
 CMakeFiles/CompagniaAerea.dir/main.c.obj: ../graph.h
+CMakeFiles/CompagniaAerea.dir/main.c.obj: ../list.h
 CMakeFiles/CompagniaAerea.dir/main.c.obj: ../main.c
 CMakeFiles/CompagniaAerea.dir/main.c.obj: ../sqlite3.h
 

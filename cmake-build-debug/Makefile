@@ -38,19 +38,19 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe"
+CMAKE_COMMAND = "C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe"
 
 # The command to remove a file.
-RM = "D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe" -E remove -f
+RM = "C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe" -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Fabrizio\CLionProjects\CompagniaAerea
+CMAKE_SOURCE_DIR = C:\Users\gianl\CLionProjects\CompagniaAerea
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -58,7 +58,7 @@ CMAKE_BINARY_DIR = C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-de
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	"D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available."
+	"C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available."
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -69,7 +69,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	"D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe" -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	"C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe" -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -79,9 +79,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -149,6 +149,33 @@ graph.c.s:
 	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/graph.c.s
 .PHONY : graph.c.s
 
+list.obj: list.c.obj
+
+.PHONY : list.obj
+
+# target to build an object file
+list.c.obj:
+	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/list.c.obj
+.PHONY : list.c.obj
+
+list.i: list.c.i
+
+.PHONY : list.i
+
+# target to preprocess a source file
+list.c.i:
+	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/list.c.i
+.PHONY : list.c.i
+
+list.s: list.c.s
+
+.PHONY : list.s
+
+# target to generate assembly for a file
+list.c.s:
+	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/list.c.s
+.PHONY : list.c.s
+
 main.obj: main.c.obj
 
 .PHONY : main.obj
@@ -215,6 +242,9 @@ help:
 	@echo ... graph.obj
 	@echo ... graph.i
 	@echo ... graph.s
+	@echo ... list.obj
+	@echo ... list.i
+	@echo ... list.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
