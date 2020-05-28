@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.c
+graph.h
+C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.h
+
 C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.h
 stdlib.h
 -
@@ -15,16 +19,16 @@ stdio.h
 -
 
 C:/Users/Fabrizio/CLionProjects/CompagniaAerea/main.c
-stdio.h
--
 stdlib.h
+-
+string.h
+-
+stdio.h
 -
 sqlite3.h
 C:/Users/Fabrizio/CLionProjects/CompagniaAerea/sqlite3.h
 graph.h
 C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.h
-string.h
--
 
 C:/Users/Fabrizio/CLionProjects/CompagniaAerea/sqlite3.h
 stdarg.h

@@ -8,6 +8,8 @@
 typedef struct edge {
     char citta[100];
     int km;
+    int dbindex;
+    int inserito;
     struct node *next;
 }Edge;
 
@@ -17,6 +19,6 @@ typedef struct ArrayNode{
 }Graph;
 
 Graph *CreaGrafo(int n);
-int creaNodo(Graph *P, char *aereoporto, int km, int insert);
-void Aggiungi(Graph *P, char *cittadestinazione, int km, int insert, int index);
-int Rimuovi (Graph *G, char *cittapartenza, char *cittadestinazione);
+int creaNodo(Graph *P);
+void Aggiungi(Graph *P, char *cittadestinazione, int km, int insert, int dbindex, int index);
+void Rimuovi (Graph *G, int indedx, char *cittadestinazione, int dbindex);

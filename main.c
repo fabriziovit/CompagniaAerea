@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include "sqlite3.h"
 #include "graph.h"
-#include <string.h>
 #define MAX 100
 sqlite3 *db;
 
@@ -42,11 +42,11 @@ void initStruct(Graph *G) {
     sqlite3_finalize(stmt);
 
     G = CreaGrafo(index);
-   //query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
-   // caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
-   //index = naeropo;
-   //km da prendere
-   //Aggiungi(G,cittadestinazione, km, 0, index);
+    //query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
+    // caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
+    //index = naeropo;
+    //km da prendere
+    //Aggiungi(G,cittadestinazione, km, 0, index);
     sqlite3_finalize(stmt);
 }
 
@@ -128,6 +128,55 @@ int EffettuaAccesso(char username[], char password[]){
     return 0;
 }
 
+int getRowAero(char *codice){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
+    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if(rc == SQLITE_ROW) {
+        return sqlite3_column_int(stmt, 0);
+    } else
+        return 0;
+}
+
+char *getCitta(char *codice){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
+    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if(rc == SQLITE_ROW)
+        return (char*)sqlite3_column_text(stmt, 2);
+    else
+        return NULL;
+}
+
+int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "DELETE FROM TRATTE WHERE AEROPART = ?1 AND AERODEST = ?2;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, codicePartenza, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, codiceDestinazione);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        printf("Exit");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+    if(sqlite3_changes(db) != 0){
+        printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza,
+               codiceDestinazione);
+    } else{
+        printf("Gli aeroport inseriti non hanno una tratta, controlla di aver inserito i dati corretti!\n\n");
+    }
+}
+
 int main() {
     char username[MAX];
     char nome[MAX], cognome[MAX];
@@ -135,7 +184,8 @@ int main() {
     int scelta = 1;
     Graph *G;
 
-    creaDatabase(&G);
+    creaDatabase(G);
+    G = CreaGrafo(1);
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
         if ((scelta > 0) && (scelta < 3)) {
@@ -166,79 +216,124 @@ int main() {
                 //salvataggio nel db
                 break;
             case 2:
-                do{
-                    //Effettuare il login e controllo se utente o amministratore
-                    printf("Inserisci username:\n");
-                    gets(username);
-                    printf("Inserisci password:\n");
-                    gets(password);
-                    if(EffettuaAccesso(username, password) == 0){
-                        printf("username/password errate!Riprova.\n");
-                    } else if(EffettuaAccesso(username, password) == 1) {
-                        int sceltaUtente = 1;
-                        printf("%s ha effettuato correttamente l'accesso!\n", username);
-                        //poter scegliere e visualizzare i voli
-                        do {
-                            if ((scelta > 0) && (scelta < 4)) {
-                                printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
-                                printf("1. Visualizza voli.\n");
-                                printf("2. Prenota un volo.\n");
-                                printf("3. Visualizza prenotazioni.\n");
-                                printf("4. Effettuare il Logout.\n");
-                            } else {
-                                printf("Riprova! Hai inserito un numero non valido.\n");
-                            }
-                            scanf("%d", &sceltaUtente);
-                            getchar();
-                            switch (scelta) {
-                                case 1:
-                                    //visualizzare tutti i voli
-                                    break;
-                                case 2:
-                                    //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
-                                    //Oppure scegliere gli algoritmi, piu economico, piu veloce
-                                    break;
-                                case 3:
-                                    //visualizzare tutte le prenotazioni effettuate
-                                    break;
-                            }
-                        }while(scelta != 4);
-                    }else if(EffettuaAccesso(username, password) == 2){
-                        int sceltaAdmin = 1;
-                        printf("L'admin %s ha effettuato correttamente l'accesso!\n", username);
-                        do {
-                            if ((scelta > 0) && (scelta < 5)) {
-                                printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
-                                printf("1. Visualizza voli.\n");
-                                printf("2. Aggiungere nuovi aereporti.\n");
-                                printf("3. Aggiungere nuovo volo.\n");
-                                printf("4. Rimuovere un volo.\n");
-                                printf("5. Effettuare il Logout.\n");
-                            } else {
-                                printf("Riprova! Hai inserito un numero non valido.\n");
-                            }
-                            scanf("%d", &sceltaAdmin);
-                            getchar();
-                            switch (scelta) {
-                                case 1:
-                                    //visualizzare voli
-                                    break;
-                                case 2:
-                                    //Aggiungere nuovo nodo con funzione creaNodo
-                                    break;
-                                case 3:
-                                    //Aggiungere nuovo arco con funzione Aggiungi
-                                    break;
-                                case 4:
-                                    //Rimuovere un arco con funzione rimuovi
-                                    break;
-                            }
-                        }while(scelta != 5);
-                        //poter inserire o rimuovere tratte o voli con scali
-                    }
-                }while(EffettuaAccesso(username, password) == 0);
+                //Effettuare il login e controllo se utente o amministratore
+                printf("Inserisci username:\n");
+                gets(username);
+                printf("Inserisci password:\n");
+                gets(password);
+                if(EffettuaAccesso(username, password) == 0){
+                    printf("username/password errate!Riprova.\n");
+                } else if(EffettuaAccesso(username, password) == 1) {
+                    int sceltaUtente = 1;
+                    printf("%s ha effettuato correttamente l'accesso!\n", username);
+                    //poter scegliere e visualizzare i voli
+                    do {
+                        if ((scelta > 0) && (scelta < 4)) {
+                            printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                            printf("1. Visualizza voli.\n");
+                            printf("2. Prenota un volo.\n");
+                            printf("3. Visualizza prenotazioni.\n");
+                            printf("4. Effettuare il Logout.\n");
+                        } else {
+                            printf("Riprova! Hai inserito un numero non valido.\n");
+                        }
+                        scanf("%d", &sceltaUtente);
+                        getchar();
+                        switch (sceltaUtente) {
+                            case 1:
+                                //visualizzare tutti i voli
+                                break;
+                            case 2:
+                                //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
+                                //Oppure scegliere gli algoritmi, piu economico, piu veloce
+                                break;
+                            case 3:
+                                //visualizzare tutte le prenotazioni effettuate
+                                break;
+                        }
+                    }while(sceltaUtente != 4);
+                }else if(EffettuaAccesso(username, password) == 2){
+                    int sceltaAdmin = 1;
+                    char codice[10];
+                    char citta[100];
+                    int indice;
+                    int indiceDest;
+                    int km;
+                    char codiceDest[10];
+                    printf("L'admin %s ha effettuato correttamente l'accesso!\n", username);
+                    do {
+                        if ((scelta > 0) && (scelta < 5)) {
+                            printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                            printf("1. Visualizza voli.\n");
+                            printf("2. Aggiungere nuovi aereporti.\n");
+                            printf("3. Aggiungere nuovo volo.\n");
+                            printf("4. Rimuovere un volo.\n");
+                            printf("5. Effettuare il Logout.\n");
+                        } else {
+                            printf("Riprova! Hai inserito un numero non valido.\n");
+                        }
+                        scanf("%d", &sceltaAdmin);
+                        getchar();
+                        switch (sceltaAdmin) {
+                            case 1:
+                                //visualizzare voli
+                                break;
+                            case 2:
+                                //Aggiungere nuovo nodo con funzione creaNodo
+                                printf("Inserisci il codice dell'aeroporto:\n");
+                                gets(codice);
+                                printf("Inserisci la citta` dove si trova l'aeroporto:\n");
+                                gets(citta);
+                                indice = creaNodo(G)+1;//da testare meglio
+                                //salvataggio nel db
+                                break;
+                            case 3:
+                                //Aggiungere nuovo arco con funzione Aggiungi
+                                do{
+                                    printf("Inserisci il codice dell'aeroporto di partenza:\n");
+                                    gets(codice);
+                                    if(getRowAero(codice) != 0) {
+                                        indice = getRowAero(codice) - 1;
+                                        printf("Inserisci il codice dell'aeroporto di destinazione:\n");
+                                        gets(codiceDest);
+                                        if (getRowAero(codiceDest) != 0) {
+                                            indiceDest = getRowAero(codice);
+                                            if (getCitta(codiceDest) != NULL) {
+                                                strcpy(citta, getCitta(codiceDest));
+                                                printf("Inserisci i km tra i due aeroporti:\n");
+                                                scanf("%d", &km);
+                                            }else
+                                                printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
+                                        } else{
+                                            printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
+                                        }
+                                    } else{
+                                        printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
+                                    }
+                                    //aggiungi nel grafo
+                                    Aggiungi(G, citta, km, 1 ,indiceDest, indice);//da testare
+                                    //Aggiunta del volo nel db tabella TRATTE
+                                }while (getRowAero(codice) == 0 || getCitta(codice) == NULL);
+                                break;
+                            case 4:
+                                //Rimuovere un arco con funzione rimuovi
+                                do {
+                                    printf("Inserisci il codice dell'aeroporto di partenza:\n");//da testare
+                                    gets(codice);
+                                    indice = getRowAero(codice) - 1;
+                                    printf("Inserisci il codice dell'aeroporto di destinazione rimuovendo la tratta:\n");
+                                    gets(codiceDest);
+                                    if (getRowAero(codice) != 0 && getRowAero(codiceDest) != 0) {
+                                        rimuoviTratta(codice, codiceDest);
+                                        Rimuovi(G, indice, codiceDest, getRowAero(codiceDest));
+                                    } else
+                                        printf("I dati inseriti non corrispondo controlla di aver inserito i codici giusti!\n");
+                                }while (getRowAero(codice) == 0 && getRowAero(codiceDest) == 0);
+                                break;
+                        }
+                    }while(sceltaAdmin != 5);
+                }
                 break;
-
         }
     }while (scelta != 3);
     //saveToDatabase(&Lista, P);

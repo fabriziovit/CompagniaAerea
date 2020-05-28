@@ -21,10 +21,10 @@ Graph *CreaGrafo(int n){
     return(G);
 }
 
-int creaNodo(Graph *G, char *aereoporto, int km, int insert){
+int creaNodo(Graph *G){
     int ind = 0;
     if (G == NULL) {
-        printf("ERRORE: impossibile ls lista e vuota\n");
+        printf("ERRORE: impossibile la lista e vuota\n");
     } else {
         if (G->adj == NULL){
             G->adj = (Edge **) malloc(sizeof(Edge *));
@@ -42,16 +42,17 @@ int creaNodo(Graph *G, char *aereoporto, int km, int insert){
     return ind;
 }
 
-void Aggiungi(Graph *G, char *cittadestinazione, int km, int insert, int index){
+void Aggiungi(Graph *G, char *cittadestinazione, int km, int insert,int dbindex, int index){
     Edge *new, *e;
-    new = (Edge *)malloc(sizeof(Edge));
+    new = (Edge*)malloc(sizeof(Edge));
     if (new == NULL)
         printf("ERRORE: impossibile allocare memoria\n");
     else {
         //query per trovare l'indice dell'aeroporto
         strcpy(new->citta, cittadestinazione);
         new->km = km;
-        //new->inseritoRT = insert;
+        new->inserito = insert;
+        new->dbindex = dbindex;
         new->next=NULL;
         if (G->adj[index] == NULL) {
             G->adj[index] = new;
@@ -64,22 +65,22 @@ void Aggiungi(Graph *G, char *cittadestinazione, int km, int insert, int index){
     }
 }
 
-int Rimuovi (Graph *G, char *cittapartenza, char *cittadestinazione){
+void Rimuovi(Graph *G, int index, char *cittadestinazione, int dbindex) {
     Edge *prev;
     Edge *e;
     //Ricerca nel db di cittapartenza e cerca nella lista di adiacenza adj[index] e scorrere la lista per
-    int index;//sara uguale al risultato della query
     e = G->adj[index];
-    if (e){
-        while(e!=NULL){
-            if(strcmp(e->citta, cittadestinazione) == 0){
-                break;
-            }
-            e = e->next;
-        }
+    if (strcmp(e->citta, cittadestinazione) == 0 && dbindex == e->dbindex)
         G->adj[index] = e->next;
-        free(e);
-        return 1;
+    else {
+        prev = e;
+        while (prev != NULL) {
+            if(strcmp(prev->citta, cittadestinazione) && prev->dbindex == dbindex)
+                break;
+            prev = prev->next;
+        }
+        e = prev->next;
+        prev->next = e->next;
     }
-    return 0;
+    free(e);
 }
