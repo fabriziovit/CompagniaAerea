@@ -128,6 +128,24 @@ int EffettuaAccesso(char username[], char password[]){
     return 0;
 }
 
+void salvaNuovoAero(char *codice,char *citta){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "INSERT INTO AEROPORTO(CODAERO, CITTA) VALUES(?1, ?2);";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, citta, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        printf("Exit");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+    printf("Aeroporto aggiunto correttamente!\n");
+}
+
 int getRowAero(char *codice){
     char *sql;
     int rc;
@@ -161,7 +179,7 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
     sql = "DELETE FROM TRATTE WHERE AEROPART = ?1 AND AERODEST = ?2;";
     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, codicePartenza, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, codiceDestinazione);
+    sqlite3_bind_text(stmt, 2, codiceDestinazione, -1, SQLITE_STATIC);
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
         printf("Exit");
@@ -170,8 +188,7 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
     }
     sqlite3_finalize(stmt);
     if(sqlite3_changes(db) != 0){
-        printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza,
-               codiceDestinazione);
+        printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza, codiceDestinazione);
     } else{
         printf("Gli aeroport inseriti non hanno una tratta, controlla di aver inserito i dati corretti!\n\n");
     }
@@ -286,6 +303,7 @@ int main() {
                                 gets(citta);
                                 indice = creaNodo(G)+1;//da testare meglio
                                 //salvataggio nel db
+                                salvaNuovoAero(codice, citta);
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
