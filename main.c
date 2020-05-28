@@ -301,9 +301,9 @@ int main() {
                                 gets(codice);
                                 printf("Inserisci la citta` dove si trova l'aeroporto:\n");
                                 gets(citta);
-                                indice = creaNodo(G)+1;//da testare meglio
                                 //salvataggio nel db
-                                salvaNuovoAero(codice, citta);
+                                salvaNuovoAero(codice, citta);//da testare
+                                indice = creaNodo(G)+1;//da testare
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
