@@ -381,7 +381,7 @@ int main() {
                                 gets(citta);
                                 //salvataggio nel db al termine del programma
                                 indice = creaNodo(G)+1;//da testare
-                                inserisciCoda(L, indice, codice, citta, 1);
+                                inserisciCoda(&L, indice, codice, citta, 1);
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
