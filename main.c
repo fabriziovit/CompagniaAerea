@@ -33,12 +33,17 @@ int tableExists() {
 }
 
 //funzione per inizializzare le strutture dati
-void initStruct(Graph *G) {
+void initStruct(Graph *G, aeroporto *L) {
     sqlite3_stmt *stmt;
     int rc;
     int index = 0;
 
-    sqlite3_prepare_v2(db, "select COUNT(*) from AEROPORTO;", -1, &stmt, NULL);
+    sqlite3_prepare_v2(db, "select * from LIBRI ORDER BY ID ASC;", -1, &stmt, NULL);
+    while((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+        inserisciCoda(L, sqlite3_column_int(stmt, 0), (char*)sqlite3_column_text(stmt, 1), (char *)sqlite3_column_text(stmt, 2), 0);
+    sqlite3_finalize(stmt);
+
+    sqlite3_prepare_v2(db, "select * from AEROPORTO;", -1, &stmt, NULL);
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         index++;
     }
@@ -50,12 +55,12 @@ void initStruct(Graph *G) {
     //index = naeropo;
     //km da prendere
     //Aggiungi(G,cittadestinazione, km, 0, index);
-    sqlite3_finalize(stmt);
+    //sqlite3_finalize(stmt);
 }
 
 
 //funzione che crea il database se non trova il file .db
-void creaDatabase(Graph *G){
+void creaDatabase(Graph *G , aeroporto *L){
     char *zErrMsg = 0;
     int rc;
     char *sql;
@@ -74,7 +79,7 @@ void creaDatabase(Graph *G){
         exit(-1);
     } else {
         if (tableExists() == 1) {
-            initStruct(G);
+            initStruct(G , L);
         }
         else {
             //creazione tabelle
@@ -91,6 +96,85 @@ void creaDatabase(Graph *G){
             }
         }
     }
+}
+
+//funzione per salvare le modifiche avvenute nelle strutture dati e salvare i cambiamenti nel database
+void saveToDatabase(aeroporto *L, Graph *P, Prenotazioni *Lista) {
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    aeroporto temp = *L;
+    Prenotazioni temp2 = *Lista;
+
+/*
+    if (!temp) {
+        printf("Salvataggio non effettuato, la lista e' vuota\n");
+    } else {
+        while (temp!=NULL){
+            if(temp->is_present == 0){
+                //insert
+                sql="INSERT INTO LIBRI(ID, TITOLO, AUTORE, QUANTITA) VALUES(?1,?2,?3,?4);";
+                sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+                sqlite3_bind_int(stmt, 1, temp->codiceLibro);
+                sqlite3_bind_text(stmt, 2, temp->titolo, -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 3, temp->autore, -1, SQLITE_STATIC);
+                sqlite3_bind_int(stmt, 4, temp->quantita);
+
+                rc = sqlite3_step(stmt);
+                if (rc != SQLITE_DONE) {
+                    printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
+                    sqlite3_close(db);
+                    exit(-1);
+                }
+                sqlite3_finalize(stmt);
+            }
+            else if(temp->is_present==2){
+                //update
+                sql="UPDATE LIBRI SET QUANTITA = ?1 WHERE ID= ?2";
+                sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+                sqlite3_bind_int(stmt, 1, temp->quantita);
+                sqlite3_bind_int(stmt, 2, temp->codiceLibro);
+                rc = sqlite3_step(stmt);
+                if (rc != SQLITE_DONE) {
+                    printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
+                    sqlite3_close(db);
+                    exit(-1);
+                }
+                sqlite3_finalize(stmt);
+            }
+            temp = temp->next;
+        }
+    }
+
+    if (!P) {
+        printf("Salvataggio non effettuato, non ci sono richieste in pending\n");
+    } else {
+        Queue *e;
+        int i;
+        int id;
+        for (i = 0; i < P->n; i++) {
+            e = P->q[i];
+            id = TrovaIDByIndex(*L, i);
+            while (e!=NULL) {
+                if(e->inseritoRT == 1) {
+                    sql = "INSERT INTO RICHIESTE(ID, MATRICOLA) VALUES(?1,?2);";
+                    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+                    sqlite3_bind_int(stmt, 1, id);
+                    sqlite3_bind_text(stmt, 2, e->matricola, -1, SQLITE_STATIC);
+                    rc = sqlite3_step(stmt);
+                    if (rc != SQLITE_DONE) {
+                        printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
+                        sqlite3_close(db);
+                        exit(-1);
+                    }
+                    sqlite3_finalize(stmt);
+                }
+                e = e->next;
+            }
+        }
+        free(e);
+    }*/
+//Da vedere per salvare nel db alla fine del programma
 }
 
 void EffettuaRegistrazione(char username[], char nome[], char cognome[], char password[]){
@@ -131,29 +215,13 @@ int EffettuaAccesso(char username[], char password[]){
     return 0;
 }
 
-void salvaNuovoAero(char *codice,char *citta){
-    char *sql;
-    int rc;
-    sqlite3_stmt *stmt;
-    sql = "INSERT INTO AEROPORTO(CODAERO, CITTA) VALUES(?1, ?2);";
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, citta, -1, SQLITE_STATIC);
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE) {
-        printf("Exit");
-        sqlite3_close(db);
-        exit(-1);
-    }
-    sqlite3_finalize(stmt);
-    printf("Aeroporto aggiunto correttamente!\n");
-}
 
 int getRowAero(char *codice){
     char *sql;
     int rc;
     sqlite3_stmt *stmt;
     sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
     rc = sqlite3_step(stmt);
     if(rc == SQLITE_ROW) {
@@ -167,6 +235,7 @@ char *getCitta(char *codice){
     int rc;
     sqlite3_stmt *stmt;
     sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
     rc = sqlite3_step(stmt);
     if(rc == SQLITE_ROW)
@@ -204,8 +273,10 @@ int main() {
     char password[33];
     int scelta = 1;
     Graph *G;
+    aeroporto L=NULL;
+    Prenotazioni Lista = NULL;
 
-    creaDatabase(G);
+    creaDatabase(G , &L);
     G = CreaGrafo(1);
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
@@ -262,7 +333,8 @@ int main() {
                         getchar();
                         switch (sceltaUtente) {
                             case 1:
-                                //visualizzare tutti i voli
+                                //Visualizzare i voli
+                                stampaVoli(G, L);
                                 break;
                             case 2:
                                 //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
@@ -298,6 +370,8 @@ int main() {
                         switch (sceltaAdmin) {
                             case 1:
                                 //visualizzare voli
+                                printList(L);
+                                stampaVoli(G, L);
                                 break;
                             case 2:
                                 //Aggiungere nuovo nodo con funzione creaNodo
@@ -305,9 +379,9 @@ int main() {
                                 gets(codice);
                                 printf("Inserisci la citta` dove si trova l'aeroporto:\n");
                                 gets(citta);
-                                //salvataggio nel db
-                                salvaNuovoAero(codice, citta);//da testare
+                                //salvataggio nel db al termine del programma
                                 indice = creaNodo(G)+1;//da testare
+                                inserisciCoda(L, indice, codice, citta, 1);
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
@@ -333,7 +407,7 @@ int main() {
                                         printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
                                     }
                                     //aggiungi nel grafo
-                                    Aggiungi(G, citta, km, 1 ,indiceDest, indice);//da testare
+                                    Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);//da testare
                                     //Aggiunta del volo nel db tabella TRATTE
                                 }while (getRowAero(codice) == 0 || getCitta(codice) == NULL);
                                 break;
@@ -358,6 +432,6 @@ int main() {
                 break;
         }
     }while (scelta != 3);
-    //saveToDatabase(&Lista, P);
+    //saveToDatabase(&L, P, &Lista);
     sqlite3_close(db);
 }

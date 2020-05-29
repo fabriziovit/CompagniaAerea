@@ -42,7 +42,7 @@ int creaNodo(Graph *G){
     return ind;
 }
 
-void Aggiungi(Graph *G, char *cittadestinazione, int km, int insert,int dbindex, int index){
+void Aggiungi(Graph *G, char *cittadestinazione, char *codice, int km, int insert,int dbindex, int index){
     Edge *new, *e;
     new = (Edge*)malloc(sizeof(Edge));
     if (new == NULL)
@@ -53,6 +53,7 @@ void Aggiungi(Graph *G, char *cittadestinazione, int km, int insert,int dbindex,
         new->km = km;
         new->inserito = insert;
         new->dbindex = dbindex;
+        strcpy(new->codice, codice);
         new->next=NULL;
         if (G->adj[index] == NULL) {
             G->adj[index] = new;
@@ -83,4 +84,23 @@ void Rimuovi(Graph *G, int index, char *cittadestinazione, int dbindex) {
         prev->next = e->next;
     }
     free(e);
+}
+
+void stampaVoli(Graph *G, aeroporto L){
+    int i;
+    Edge *e;
+    char codice[10];
+    if (G == NULL) {
+        printf("\n Il grafo ha %d vertici\n", G->n);
+        for (i=0; i<G->n; i++) {
+            strcpy(codice, trovaCodice(L, i));
+            e=G->adj[i];
+            while (e!=NULL) {
+                printf("Volo da %s -> a %s", codice, e->codice);
+                e=e->next;
+            }
+            printf("\n");
+        }
+    }
+    return;
 }
