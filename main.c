@@ -268,6 +268,32 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
 
 int main() {
 
+    char mat[] = "pep";
+    char pos[] = "wes";
+    char fas[] = "sgrodolo";
+    char lol[] = "res";
+    char holt[] = "holt";
+    char mm[] = "djs";
+    char ss[] = "sw";
+    char bb[] = "dsa";
+    char gg[] = "qqq";
+    char sa[] = "mmk";
+    char vbv[] = "zx";
+    char xxc[] = "kk";
+    Prenotazioni *L= NULL;
+    //Graph *G;
+
+    //creaDatabase(G, L);
+    //G = CreaGrafo(1);
+
+    InserisciL(&L, mat, pos, fas);
+    InserisciL(&L, lol, holt, mm);
+    InserisciL(&L, ss, bb, gg);
+    EliminaElem(&L, ss, bb, gg);
+    StampaL(L);
+
+
+
     char username[MAX];
     char nome[MAX], cognome[MAX];
     char password[33];

@@ -21,7 +21,7 @@ Prenotazioni InizializzaL(char partenza[100], char destinazione[100], char utent
 
 void StampaL(Prenotazioni L){
     if (L != NULL) {
-        printf("Utente: %s\n", L->utente);
+        printf("\nUtente: %s\n", L->utente);
         printf("Citta' di Partenza: %s\n", L->partenza);
         printf("Citta' di Destinazione: %s\n", L->destinazione);
         printf("\n");
@@ -61,7 +61,7 @@ void InserisciL(Prenotazioni *L, char partenza[100], char destinazione[100], cha
             ultimo = ultimo->next;
         ultimo->next = temp;
     }
-    InserisciLDB(partenza, destinazione, utente);
+    //InserisciLDB(partenza, destinazione, utente);
 }
 
 //DA FIXARE QUANDO BISOGNA ELIMINARE IL PRIMO ELEMENTO
@@ -86,17 +86,17 @@ void EliminaLDB(char partenza[100], char destinazione[100], char utente[100]){
 }
 
 
-//DA FIXARE QUANDO NON VENGONO PASSATI PARAMETRI SBAGLIATI
+//DA FIXARE QUANDO VENGONO PASSATI PARAMETRI SBAGLIATI
 void EliminaElem(Prenotazioni *L, char partenza[100], char destinazione[100], char utente[100]){
     struct Nodo *tmp = *L;
     struct Nodo *prev;
 
-    if(tmp != NULL && ((strcmp(tmp->partenza, partenza) == 0) && (strcmp(tmp->destinazione, destinazione) == 0) && (strcmp(tmp->utente, utente) == 0))){
+    if(tmp != NULL && strcmp(tmp->partenza, partenza) == 0 && strcmp(tmp->destinazione, destinazione) == 0 && strcmp(tmp->utente, utente) == 0){
         *L = tmp->next;
         free(tmp);
         return;
     }
-    while(tmp != NULL && ((strcmp(tmp->partenza, partenza) != 0) && (strcmp(tmp->destinazione, destinazione) != 0) && (strcmp(tmp->utente, utente) != 0))){
+    while(tmp != NULL && strcmp(tmp->partenza, partenza) != 0 && strcmp(tmp->destinazione, destinazione) != 0 && strcmp(tmp->utente, utente) != 0) {
         prev = tmp;
         tmp = tmp->next;
     }
@@ -104,10 +104,11 @@ void EliminaElem(Prenotazioni *L, char partenza[100], char destinazione[100], ch
         return;
     prev->next = tmp->next;
     free(tmp);
-    EliminaLDB(partenza, destinazione, utente);
+    //EliminaLDB(partenza, destinazione, utente);
 }
 
-//Codice per provare le funzioni
+
+//Codice di prova
 /*char mat[] = "pep";
     char pos[] = "wes";
     char fas[] = "sgrodolo";
@@ -117,15 +118,17 @@ void EliminaElem(Prenotazioni *L, char partenza[100], char destinazione[100], ch
     char ss[] = "sw";
     char bb[] = "dsa";
     char gg[] = "qqq";
-    char sa[] = "SOP";
+    char sa[] = "mmk";
+    char vbv[] = "zx";
+    char xxc[] = "kk";
     Prenotazioni *L= NULL;
-    Graph *G;
+    //Graph *G;
 
-    creaDatabase(G);
-    G = CreaGrafo(1);
+    //creaDatabase(G, L);
+    //G = CreaGrafo(1);
 
     InserisciL(&L, mat, pos, fas);
     InserisciL(&L, lol, holt, mm);
     InserisciL(&L, ss, bb, gg);
-    EliminaElem(&L, sa, holt, mm);
+    EliminaElem(&L, ss, bb, gg);
     StampaL(L);*/
