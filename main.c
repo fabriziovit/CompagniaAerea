@@ -280,17 +280,17 @@ int main() {
     char sa[] = "mmk";
     char vbv[] = "zx";
     char xxc[] = "kk";
-    Prenotazioni *L= NULL;
+    Prenotazioni *Lista= NULL;
     //Graph *G;
 
     //creaDatabase(G, L);
     //G = CreaGrafo(1);
 
-    InserisciL(&L, mat, pos, fas);
-    InserisciL(&L, lol, holt, mm);
-    InserisciL(&L, ss, bb, gg);
-    EliminaElem(&L, ss, bb, gg);
-    StampaL(L);
+    InserisciL(&Lista, mat, pos, fas);
+    InserisciL(&Lista, lol, holt, mm);
+    InserisciL(&Lista, ss, bb, gg);
+    EliminaElem(&Lista, ss, bb, gg);
+    StampaL(Lista);
 
 
 
@@ -300,7 +300,6 @@ int main() {
     int scelta = 1;
     Graph *G;
     aeroporto L=NULL;
-    Prenotazioni Lista = NULL;
 
     creaDatabase(G , &L);
     G = CreaGrafo(1);
