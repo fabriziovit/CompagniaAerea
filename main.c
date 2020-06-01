@@ -37,24 +37,41 @@ void initStruct(Graph *G, aeroporto *L) {
     int rc;
     int index = 0;
 
-    sqlite3_prepare_v2(db, "select * from LIBRI ORDER BY ID ASC;", -1, &stmt, NULL);
-    while((rc = sqlite3_step(stmt)) == SQLITE_ROW)
-        inserisciCoda(L, sqlite3_column_int(stmt, 0), (char*)sqlite3_column_text(stmt, 1), (char *)sqlite3_column_text(stmt, 2), 0);
-    sqlite3_finalize(stmt);
-
-    sqlite3_prepare_v2(db, "select * from AEROPORTO;", -1, &stmt, NULL);
+    sqlite3_prepare_v2(db, "select * from AEROPORTO ORDER BY NAEROPO ASC;", -1, &stmt, NULL);
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        inserisciCoda(L, sqlite3_column_int(stmt, 0), (char*)sqlite3_column_text(stmt, 1), (char*)sqlite3_column_text(stmt, 2), 0);
         index++;
     }
     sqlite3_finalize(stmt);
 
-    G = CreaGrafo(index);
-    //query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
-    // caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
-    //index = naeropo;
-    //km da prendere
-    //Aggiungi(G,cittadestinazione, km, 0, index);
-    //sqlite3_finalize(stmt);
+    if (index > 0) {
+        if (G == NULL) {
+            printf("ERRORE: impossibile allocare memoria per il grafo\n");
+            sqlite3_close(db);
+            exit(-1);
+        } else {
+            G->adj = (Edge **) malloc(index * sizeof(Edge *));
+            if ((G->adj == NULL) && (index > 0)) {
+                printf("ERRORE: impossibile allocare memoria per la lista del grafo\n");
+                free(G);
+                G = NULL;
+            } else {
+                G->n = index;
+                for (int i = 0; i < index; i++)
+                    G->adj[i] = NULL;
+            }
+        }
+    } else {
+        G->n = index;
+        G->adj = NULL;
+    }
+
+//query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
+// caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
+//index = naeropo;
+//km da prendere
+//Aggiungi(G,cittadestinazione, km, 0, index);
+//sqlite3_finalize(stmt);
 }
 
 
@@ -83,7 +100,7 @@ void creaDatabase(Graph *G , aeroporto *L){
         else {
             //creazione tabelle
             sql = "CREATE TABLE IF NOT EXISTS UTENTI(USERNAME TEXT PRIMARY KEY, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL, PUNTI INT NOT NULL);"
-                  "CREATE TABLE IF NOT EXISTS AEREOPORTO(NAEROPO INTEGER PRIMARY KEY AUTOINCREMENT, CODAERO TEXT NOT NULL, CITTA TEXT);"
+                  "CREATE TABLE IF NOT EXISTS AEROPORTO(NAEROPO INTEGER PRIMARY KEY AUTOINCREMENT, CODAERO TEXT NOT NULL, CITTA TEXT);"
                   "CREATE TABLE IF NOT EXISTS TRATTE(TRATTA INTEGER PRIMARY KEY AUTOINCREMENT, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, KM INT NOT NULL);"
                   "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL) ;";
             rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
@@ -233,35 +250,6 @@ int EffettuaAccesso(char username[], char password[]){
     return 0;
 }
 
-
-int getRowAero(char *codice){
-    char *sql;
-    int rc;
-    sqlite3_stmt *stmt;
-    sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
-    rc = sqlite3_step(stmt);
-    if(rc == SQLITE_ROW) {
-        return sqlite3_column_int(stmt, 0);
-    } else
-        return 0;
-}
-
-char *getCitta(char *codice){
-    char *sql;
-    int rc;
-    sqlite3_stmt *stmt;
-    sql = "SELECT * FROM AEROPORTO WHERE CODAERO = ?1;";
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, codice, -1, SQLITE_STATIC);
-    rc = sqlite3_step(stmt);
-    if(rc == SQLITE_ROW)
-        return (char*)sqlite3_column_text(stmt, 2);
-    else
-        return NULL;
-}
-
 int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
     char *sql;
     int rc;
@@ -292,8 +280,9 @@ int main() {
     Graph *G;
     aeroporto L=NULL;
 
+    G = (Graph *)malloc(sizeof(Graph));
     creaDatabase(G , &L);
-    G = CreaGrafo(1);
+
     printf("***************************************************************\nBENVENUTO IN AIRITALY\n\n");
     do {
         if ((scelta > 0) && (scelta < 3)) {
@@ -364,8 +353,8 @@ int main() {
                     }while(sceltaUtente != 4);
                 }else if(EffettuaAccesso(username, password) == 2){
                     int sceltaAdmin = 1;
-                    char codice[10];
-                    char citta[100];
+                    char codice[10] = "";
+                    char citta[100] = "";
                     int indice;
                     int indiceDest;
                     int km;
@@ -397,24 +386,27 @@ int main() {
                                 printf("Inserisci la citta` dove si trova l'aeroporto:\n");
                                 gets(citta);
                                 //salvataggio nel db al termine del programma
-                                indice = creaNodo(G)+1;//da testare
+                                indice = G->n+1;
                                 inserisciCoda(&L, indice, codice, citta, 1);
+                                creaNodo(G);
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
                                 do{
                                     printf("Inserisci il codice dell'aeroporto di partenza:\n");
                                     gets(codice);
-                                    if(getRowAero(codice) != 0) {
-                                        indice = getRowAero(codice) - 1;
+                                    if(trovaArray(L, codice) != -1) {
+                                        indice = trovaArray(L, codice) - 1;
                                         printf("Inserisci il codice dell'aeroporto di destinazione:\n");
                                         gets(codiceDest);
-                                        if (getRowAero(codiceDest) != 0) {
-                                            indiceDest = getRowAero(codice);
-                                            if (getCitta(codiceDest) != NULL) {
-                                                strcpy(citta, getCitta(codiceDest));
+                                        if (trovaArray(L, codiceDest) != -1) {
+                                            indiceDest = trovaArray(L, codiceDest);
+                                            if (trovaCitta(L, codiceDest) != NULL) {
+                                                strcpy(citta, trovaCitta(L, codiceDest));
                                                 printf("Inserisci i km tra i due aeroporti:\n");
                                                 scanf("%d", &km);
+                                                getchar();
+                                                Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);
                                             }else
                                                 printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
                                         } else{
@@ -423,25 +415,22 @@ int main() {
                                     } else{
                                         printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
                                     }
-                                    //aggiungi nel grafo
-                                    Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);//da testare
-                                    //Aggiunta del volo nel db tabella TRATTE
-                                }while (getRowAero(codice) == 0 || getCitta(codice) == NULL);
+                                }while (trovaArray(L, codice) == 0 || trovaCitta(L, codiceDest) == NULL);
                                 break;
                             case 4:
                                 //Rimuovere un arco con funzione rimuovi
                                 do {
                                     printf("Inserisci il codice dell'aeroporto di partenza:\n");//da testare
                                     gets(codice);
-                                    indice = getRowAero(codice) - 1;
+                                    indice = trovaArray(L, codice) - 1;
                                     printf("Inserisci il codice dell'aeroporto di destinazione rimuovendo la tratta:\n");
                                     gets(codiceDest);
-                                    if (getRowAero(codice) != 0 && getRowAero(codiceDest) != 0) {
-                                        rimuoviTratta(codice, codiceDest);
-                                        Rimuovi(G, indice, codiceDest, getRowAero(codiceDest));
+                                    if (trovaArray(L, codice) != -1 && trovaArray(L, codiceDest) != -1) {
+                                        //rimuoviTratta(codice, codiceDest);
+                                        Rimuovi(G, indice, codiceDest);
                                     } else
                                         printf("I dati inseriti non corrispondo controlla di aver inserito i codici giusti!\n");
-                                }while (getRowAero(codice) == 0 && getRowAero(codiceDest) == 0);
+                                }while (trovaArray(L, codice) == 0 && trovaArray(L, codiceDest) == 0);
                                 break;
                         }
                     }while(sceltaAdmin != 5);
@@ -449,6 +438,6 @@ int main() {
                 break;
         }
     }while (scelta != 3);
-    //saveToDatabase(&L, P, &Lista);
+    //saveToDatabase(&L, P);
     sqlite3_close(db);
 }

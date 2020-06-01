@@ -12,7 +12,7 @@ typedef struct edge {
     int km;
     int dbindex;
     int inserito;
-    struct node *next;
+    struct edge *next;
 }Edge;
 
 typedef struct ArrayNode{
@@ -20,8 +20,7 @@ typedef struct ArrayNode{
     Edge **adj;
 }Graph;
 
-Graph *CreaGrafo(int n);
-int creaNodo(Graph *P);
-void Aggiungi(Graph *P, char *cittadestinazione, char *codice, int km, int insert, int dbindex, int index);
-void Rimuovi (Graph *G, int indedx, char *cittadestinazione, int dbindex);
+void creaNodo(Graph *P);
+void Aggiungi(Graph *P, char cittadestinazione[], char codice[], int km, int insert, int dbindex, int index);
+void Rimuovi (Graph *G, int indedx, char *codice);
 void stampaVoli(Graph *G, aeroporto L);

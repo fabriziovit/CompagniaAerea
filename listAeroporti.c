@@ -9,7 +9,7 @@
 void printList(aeroporto L) {
     if (L != NULL) {
         printf("Codice Aeroporto: %s\n", L->codiceAeroporto);
-        printf("citta` in cui si trova l'aeroporto: %s\n", L->citta);
+        printf("Citta` in cui si trova l'aeroporto: %s\n", L->citta);
         printf("\n");
         printList(L->next);
     }
@@ -41,7 +41,7 @@ void inserisciCoda(aeroporto *l, int indexDB, char codice[10], char citta[100] ,
 
 int trovaArray(aeroporto L, char codice[10]){
     while(L){
-        if(L->codiceAeroporto == codice)
+        if(strcmp(L->codiceAeroporto,codice) == 0)
             return L->indexDB;
         else
             L=L->next;
@@ -53,6 +53,16 @@ char *trovaCodice(aeroporto L, int indexDB){
     while(L){
         if(L->indexDB == indexDB)
             return L->codiceAeroporto;
+        else
+            L=L->next;
+    }
+    return NULL;
+}
+
+char *trovaCitta(aeroporto L, char codice[10]){
+    while(L){
+        if(strcmp(L->codiceAeroporto,codice) == 0)
+            return L->citta;
         else
             L=L->next;
     }
