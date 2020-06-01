@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "sqlite3.h"
 #include "graph.h"
-#include "list.h"
 #define MAX 100
 sqlite3 *db;
 
@@ -98,13 +97,32 @@ void creaDatabase(Graph *G , aeroporto *L){
     }
 }
 
+void AggiungiPrenotazioniDB(char partenza[100], char destinazione[100], char utente[100]){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+
+    sql = "INSERT INTO PRENOTATO(USERNAME, AEROPART, AERODEST) VALUES(?1, ?2, ?3)";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, utente, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, partenza, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, destinazione, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if(rc != SQLITE_DONE){
+        printf("Errore durante l'inserimento \n");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+    printf("\nPrenotazione confermata \n");
+}
+
 //funzione per salvare le modifiche avvenute nelle strutture dati e salvare i cambiamenti nel database
-void saveToDatabase(aeroporto *L, Graph *P, Prenotazioni *Lista) {
+void saveToDatabase(aeroporto *L, Graph *P) {
     char *sql;
     int rc;
     sqlite3_stmt *stmt;
     aeroporto temp = *L;
-    Prenotazioni temp2 = *Lista;
 
 /*
     if (!temp) {
@@ -267,33 +285,6 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
 }
 
 int main() {
-
-    char mat[] = "pep";
-    char pos[] = "wes";
-    char fas[] = "sgrodolo";
-    char lol[] = "res";
-    char holt[] = "holt";
-    char mm[] = "djs";
-    char ss[] = "sw";
-    char bb[] = "dsa";
-    char gg[] = "qqq";
-    char sa[] = "mmk";
-    char vbv[] = "zx";
-    char xxc[] = "kk";
-    Prenotazioni *Lista= NULL;
-    //Graph *G;
-
-    //creaDatabase(G, L);
-    //G = CreaGrafo(1);
-
-    InserisciL(&Lista, mat, pos, fas);
-    InserisciL(&Lista, lol, holt, mm);
-    InserisciL(&Lista, ss, bb, gg);
-    EliminaElem(&Lista, ss, bb, gg);
-    StampaL(Lista);
-
-
-
     char username[MAX];
     char nome[MAX], cognome[MAX];
     char password[33];
@@ -363,6 +354,7 @@ int main() {
                                 break;
                             case 2:
                                 //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
+                                //AggiungiPrenotazioniDB(partenza, destinazione, utente);
                                 //Oppure scegliere gli algoritmi, piu economico, piu veloce
                                 break;
                             case 3:
