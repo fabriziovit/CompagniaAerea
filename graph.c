@@ -93,7 +93,7 @@ void stampaVoli(Graph *G, aeroporto L){
     if (G == NULL) {
         printf("\n Il grafo ha %d vertici\n", G->n);
         for (i=0; i<G->n; i++) {
-            strcpy(codice, trovaCodice(L, i));
+            strcpy(codice, trovaCodice(L, i+1));
             e=G->adj[i];
             while (e!=NULL) {
                 printf("Volo da %s -> a %s", codice, e->codice);
