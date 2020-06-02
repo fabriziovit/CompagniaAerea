@@ -394,7 +394,7 @@ int main() {
                             case 1:
                                 //visualizzare voli
                                 printList(L);
-                                //stampaVoli(G, L);//da fixare non funziona
+                                stampaVoli(G, L);//da fixare non funziona
                                 break;
                             case 2:
                                 //Aggiungere nuovo nodo con funzione creaNodo

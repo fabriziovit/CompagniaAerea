@@ -37,6 +37,7 @@ void Aggiungi(Graph *G, char cittadestinazione[], char codice[], int km, int ins
         new->inserito = insert;
         new->dbindex = dbindex;
         strncpy(new->codice, codice,10);
+        new->next = NULL;
         if (G->adj[index] == NULL) {
             G->adj[index] = new;
         } else {
@@ -79,7 +80,7 @@ void stampaVoli(Graph *G, aeroporto L){
                 printf("Volo da %s -> a %s\n", codice, e->codice);
                 e = e->next;
             }
-            //printf("\n");
+            printf("\n");
         }
     }
 }
