@@ -20,7 +20,9 @@ typedef struct ArrayNode{
     Edge **adj;
 }Graph;
 
+
 void creaNodo(Graph *P);
 void Aggiungi(Graph *P, char cittadestinazione[], char codice[], int km, int insert, int dbindex, int index);
 void Rimuovi (Graph *G, int indedx, char *codice);
 void stampaVoli(Graph *G, aeroporto L);
+void Dijkstra(Graph *G, int src);

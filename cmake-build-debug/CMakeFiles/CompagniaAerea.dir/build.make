@@ -33,19 +33,19 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe"
+CMAKE_COMMAND = "C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe"
 
 # The command to remove a file.
-RM = "D:\JetBrain\CLion 2020.1.1\bin\cmake\win\bin\cmake.exe" -E remove -f
+RM = "C:\Program Files\CLion-2020.1.1.win\bin\cmake\win\bin\cmake.exe" -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Fabrizio\CLionProjects\CompagniaAerea
+CMAKE_SOURCE_DIR = C:\Users\gianl\CLionProjects\CompagniaAerea
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/CompagniaAerea.dir/depend.make
@@ -58,62 +58,76 @@ include CMakeFiles/CompagniaAerea.dir/flags.make
 
 CMakeFiles/CompagniaAerea.dir/main.c.obj: CMakeFiles/CompagniaAerea.dir/flags.make
 CMakeFiles/CompagniaAerea.dir/main.c.obj: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/CompagniaAerea.dir/main.c.obj"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\main.c.obj   -c C:\Users\Fabrizio\CLionProjects\CompagniaAerea\main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/CompagniaAerea.dir/main.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\main.c.obj   -c C:\Users\gianl\CLionProjects\CompagniaAerea\main.c
 
 CMakeFiles/CompagniaAerea.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CompagniaAerea.dir/main.c.i"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Fabrizio\CLionProjects\CompagniaAerea\main.c > CMakeFiles\CompagniaAerea.dir\main.c.i
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\gianl\CLionProjects\CompagniaAerea\main.c > CMakeFiles\CompagniaAerea.dir\main.c.i
 
 CMakeFiles/CompagniaAerea.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CompagniaAerea.dir/main.c.s"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Fabrizio\CLionProjects\CompagniaAerea\main.c -o CMakeFiles\CompagniaAerea.dir\main.c.s
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\gianl\CLionProjects\CompagniaAerea\main.c -o CMakeFiles\CompagniaAerea.dir\main.c.s
 
 CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj: CMakeFiles/CompagniaAerea.dir/flags.make
 CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj: ../sqlite3.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\sqlite3.c.obj   -c C:\Users\Fabrizio\CLionProjects\CompagniaAerea\sqlite3.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\sqlite3.c.obj   -c C:\Users\gianl\CLionProjects\CompagniaAerea\sqlite3.c
 
 CMakeFiles/CompagniaAerea.dir/sqlite3.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CompagniaAerea.dir/sqlite3.c.i"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Fabrizio\CLionProjects\CompagniaAerea\sqlite3.c > CMakeFiles\CompagniaAerea.dir\sqlite3.c.i
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\gianl\CLionProjects\CompagniaAerea\sqlite3.c > CMakeFiles\CompagniaAerea.dir\sqlite3.c.i
 
 CMakeFiles/CompagniaAerea.dir/sqlite3.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CompagniaAerea.dir/sqlite3.c.s"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Fabrizio\CLionProjects\CompagniaAerea\sqlite3.c -o CMakeFiles\CompagniaAerea.dir\sqlite3.c.s
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\gianl\CLionProjects\CompagniaAerea\sqlite3.c -o CMakeFiles\CompagniaAerea.dir\sqlite3.c.s
 
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: CMakeFiles/CompagniaAerea.dir/flags.make
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../graph.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/CompagniaAerea.dir/graph.c.obj"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\graph.c.obj   -c C:\Users\Fabrizio\CLionProjects\CompagniaAerea\graph.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/CompagniaAerea.dir/graph.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\graph.c.obj   -c C:\Users\gianl\CLionProjects\CompagniaAerea\graph.c
 
 CMakeFiles/CompagniaAerea.dir/graph.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CompagniaAerea.dir/graph.c.i"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Fabrizio\CLionProjects\CompagniaAerea\graph.c > CMakeFiles\CompagniaAerea.dir\graph.c.i
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\gianl\CLionProjects\CompagniaAerea\graph.c > CMakeFiles\CompagniaAerea.dir\graph.c.i
 
 CMakeFiles/CompagniaAerea.dir/graph.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CompagniaAerea.dir/graph.c.s"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Fabrizio\CLionProjects\CompagniaAerea\graph.c -o CMakeFiles\CompagniaAerea.dir\graph.c.s
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\gianl\CLionProjects\CompagniaAerea\graph.c -o CMakeFiles\CompagniaAerea.dir\graph.c.s
 
 CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj: CMakeFiles/CompagniaAerea.dir/flags.make
 CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj: ../listAeroporti.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\listAeroporti.c.obj   -c C:\Users\Fabrizio\CLionProjects\CompagniaAerea\listAeroporti.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\listAeroporti.c.obj   -c C:\Users\gianl\CLionProjects\CompagniaAerea\listAeroporti.c
 
 CMakeFiles/CompagniaAerea.dir/listAeroporti.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CompagniaAerea.dir/listAeroporti.c.i"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Fabrizio\CLionProjects\CompagniaAerea\listAeroporti.c > CMakeFiles\CompagniaAerea.dir\listAeroporti.c.i
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\gianl\CLionProjects\CompagniaAerea\listAeroporti.c > CMakeFiles\CompagniaAerea.dir\listAeroporti.c.i
 
 CMakeFiles/CompagniaAerea.dir/listAeroporti.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CompagniaAerea.dir/listAeroporti.c.s"
-	C:\MinGW\bin\mingw32-gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Fabrizio\CLionProjects\CompagniaAerea\listAeroporti.c -o CMakeFiles\CompagniaAerea.dir\listAeroporti.c.s
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\gianl\CLionProjects\CompagniaAerea\listAeroporti.c -o CMakeFiles\CompagniaAerea.dir\listAeroporti.c.s
+
+CMakeFiles/CompagniaAerea.dir/heap.c.obj: CMakeFiles/CompagniaAerea.dir/flags.make
+CMakeFiles/CompagniaAerea.dir/heap.c.obj: ../heap.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/CompagniaAerea.dir/heap.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\CompagniaAerea.dir\heap.c.obj   -c C:\Users\gianl\CLionProjects\CompagniaAerea\heap.c
+
+CMakeFiles/CompagniaAerea.dir/heap.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CompagniaAerea.dir/heap.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\gianl\CLionProjects\CompagniaAerea\heap.c > CMakeFiles\CompagniaAerea.dir\heap.c.i
+
+CMakeFiles/CompagniaAerea.dir/heap.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CompagniaAerea.dir/heap.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\gianl\CLionProjects\CompagniaAerea\heap.c -o CMakeFiles\CompagniaAerea.dir\heap.c.s
 
 # Object files for target CompagniaAerea
 CompagniaAerea_OBJECTS = \
 "CMakeFiles/CompagniaAerea.dir/main.c.obj" \
 "CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj" \
 "CMakeFiles/CompagniaAerea.dir/graph.c.obj" \
-"CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
+"CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj" \
+"CMakeFiles/CompagniaAerea.dir/heap.c.obj"
 
 # External object files for target CompagniaAerea
 CompagniaAerea_EXTERNAL_OBJECTS =
@@ -122,11 +136,12 @@ CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/main.c.obj
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/graph.c.obj
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj
+CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/heap.c.obj
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/build.make
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/linklibs.rsp
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/objects1.rsp
 CompagniaAerea.exe: CMakeFiles/CompagniaAerea.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable CompagniaAerea.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking C executable CompagniaAerea.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\CompagniaAerea.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -139,6 +154,6 @@ CMakeFiles/CompagniaAerea.dir/clean:
 .PHONY : CMakeFiles/CompagniaAerea.dir/clean
 
 CMakeFiles/CompagniaAerea.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\Fabrizio\CLionProjects\CompagniaAerea C:\Users\Fabrizio\CLionProjects\CompagniaAerea C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug C:\Users\Fabrizio\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles\CompagniaAerea.dir\DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\gianl\CLionProjects\CompagniaAerea C:\Users\gianl\CLionProjects\CompagniaAerea C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug C:\Users\gianl\CLionProjects\CompagniaAerea\cmake-build-debug\CMakeFiles\CompagniaAerea.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/CompagniaAerea.dir/depend
 

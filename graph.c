@@ -3,6 +3,7 @@
 //
 
 #include "graph.h"
+#include "heap.h"
 
 void creaNodo(Graph *G){
     int ind = 0;
@@ -83,4 +84,40 @@ void stampaVoli(Graph *G, aeroporto L){
             //printf("\n");
         }
     }
+}
+
+//CONTROLLARE PER L'ULTIMA FASE
+void Dijkstra(Graph *G, int src){
+    int N = G->n;
+    int dist[N];
+    struct MinHeap *minHeap = createMinHeap(N);
+
+    for(int n=0; n<N; ++n){
+        dist[n] = INT_MAX;
+        minHeap->array[n] = newMinHeapNode(n, dist[n]);
+        minHeap->pos[n] = n;
+    }
+
+    minHeap->array[src] = newMinHeapNode(src, dist[src]);
+    minHeap->pos[src] = src;
+    dist[src] = 0;
+    decreaseKey(minHeap, src, dist[src]);
+
+    minHeap->size = N;
+
+    while(!isEmpty(minHeap)){
+        struct MinHeapNode *minHeapNode = extractMin(minHeap);
+        int u = minHeapNode->n;
+
+        struct Edge *pCrawl = Graph->array[u].head;
+        while(pCrawl != NULL){
+            int v = pCrawl->dest;
+            if(IsInMinHeap(minHeap, v) && dist[u] != INT_MAX && pCrawl->weight + dist[u] < dist[v]) {
+                dist[v] = dist[u] + pCrawl->weight;
+                decreaseKey(minHeap, v, dist[v]);
+            }
+            pCrawl = pCrawl->next;
+        }
+    }
+    printArr(dist, N);
 }
