@@ -5,7 +5,7 @@
 #include "heap.h"
 
 
-struct MinHeapNode *newMinHeapNode(int n, int dist){
+/*struct MinHeapNode *newMinHeapNode(int n, int dist){
     struct MinHeapNode *minHeapNode = (struct MinHeapNode*)malloc(sizeof(struct MinHeapNode));
 
     minHeapNode->n = n;
@@ -93,3 +93,4 @@ void printArr(int dist[], int n){
     for(int i=0; i<n; ++i)
         printf("%d \t\t %d \n", i, dist[i]);
 }
+*/

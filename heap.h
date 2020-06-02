@@ -2,11 +2,6 @@
 // Created by gianl on 02/06/2020.
 //
 
-#ifndef COMPAGNIAAEREA_HEAP_H
-#define COMPAGNIAAEREA_HEAP_H
-
-#endif //COMPAGNIAAEREA_HEAP_H
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -14,7 +9,7 @@
 #include <malloc.h>
 
 
-struct MinHeapNode{
+/*struct MinHeapNode{
     int dist;
     int n;
 };
@@ -35,4 +30,4 @@ int isEmpty(struct MinHeap *minHeap);
 struct MinHeapNode *extractMin(struct MinHeap *minHeap);
 void decreaseKey(struct MinHeap *minHeap, int n, int dist);
 bool IsInMinHeap(struct MinHeap* minHeap, int n);
-void printArr(int dist[], int n);
+void printArr(int dist[], int n);*/

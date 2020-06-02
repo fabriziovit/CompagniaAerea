@@ -250,7 +250,7 @@ int EffettuaAccesso(char username[], char password[]){
     return 0;
 }
 
-int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
+void rimuoviTratta(char *codicePartenza, char *codiceDestinazione, int indice, Graph *G){
     char *sql;
     int rc;
     sqlite3_stmt *stmt;
@@ -266,10 +266,26 @@ int rimuoviTratta(char *codicePartenza, char *codiceDestinazione){
     }
     sqlite3_finalize(stmt);
     if(sqlite3_changes(db) != 0){
+        Rimuovi(G, indice, codiceDestinazione);
         printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza, codiceDestinazione);
     } else{
         printf("Gli aeroport inseriti non hanno una tratta, controlla di aver inserito i dati corretti!\n\n");
     }
+}
+
+void visualizzaPrenotazioni(char *username){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT * FROM PRENOTATO WHERE USERNAME = ?1;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    printf("Prenotazioni effettuate:\n");
+    while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        printf("Volo da %s a %s.\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3));
+    }
+    printf("\n");
+    sqlite3_finalize(stmt);
 }
 
 int main() {
@@ -348,6 +364,7 @@ int main() {
                                 break;
                             case 3:
                                 //visualizzare tutte le prenotazioni effettuate
+                                visualizzaPrenotazioni(username);
                                 break;
                         }
                     }while(sceltaUtente != 4);
@@ -377,7 +394,7 @@ int main() {
                             case 1:
                                 //visualizzare voli
                                 printList(L);
-                                stampaVoli(G, L);
+                                //stampaVoli(G, L);//da fixare non funziona
                                 break;
                             case 2:
                                 //Aggiungere nuovo nodo con funzione creaNodo
@@ -426,8 +443,8 @@ int main() {
                                     printf("Inserisci il codice dell'aeroporto di destinazione rimuovendo la tratta:\n");
                                     gets(codiceDest);
                                     if (trovaArray(L, codice) != -1 && trovaArray(L, codiceDest) != -1) {
-                                        //rimuoviTratta(codice, codiceDest);
-                                        Rimuovi(G, indice, codiceDest);
+                                        rimuoviTratta(codice, codiceDest, indice, G);
+
                                     } else
                                         printf("I dati inseriti non corrispondo controlla di aver inserito i codici giusti!\n");
                                 }while (trovaArray(L, codice) == 0 && trovaArray(L, codiceDest) == 0);

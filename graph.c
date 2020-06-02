@@ -77,9 +77,7 @@ void stampaVoli(Graph *G, aeroporto L){
             e = G->adj[i];
             while (e!=NULL) {
                 printf("Volo da %s -> a %s\n", codice, e->codice);
-                printf("OKEYz\n");
                 e = e->next;
-                printf("OKEKDSA\n");
             }
             //printf("\n");
         }
@@ -87,7 +85,7 @@ void stampaVoli(Graph *G, aeroporto L){
 }
 
 //CONTROLLARE PER L'ULTIMA FASE
-void Dijkstra(Graph *G, int src){
+/*void Dijkstra(Graph *G, int src){
     int N = G->n;
     int dist[N];
     struct MinHeap *minHeap = createMinHeap(N);
@@ -120,4 +118,4 @@ void Dijkstra(Graph *G, int src){
         }
     }
     printArr(dist, N);
-}
+}*/
