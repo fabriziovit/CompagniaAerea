@@ -108,14 +108,14 @@ void stampaVoli(Graph *G, aeroporto L){
         struct MinHeapNode *minHeapNode = extractMin(minHeap);
         int u = minHeapNode->n;
 
-        struct Edge *pCrawl = Graph->array[u].head;
-        while(pCrawl != NULL){
-            int v = pCrawl->dest;
-            if(IsInMinHeap(minHeap, v) && dist[u] != INT_MAX && pCrawl->weight + dist[u] < dist[v]) {
-                dist[v] = dist[u] + pCrawl->weight;
+        Edge *tmp = G->adj[u];
+        while(tmp != NULL){
+            int v = tmp->dbindex;
+            if(IsInMinHeap(minHeap, v) && dist[u] != INT_MAX && tmp->km + dist[u] < dist[v]) {
+                dist[v] = dist[u] + tmp->km;
                 decreaseKey(minHeap, v, dist[v]);
             }
-            pCrawl = pCrawl->next;
+            tmp = tmp->next;
         }
     }
     printArr(dist, N);

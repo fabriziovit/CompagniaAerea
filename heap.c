@@ -4,8 +4,8 @@
 
 #include "heap.h"
 
-
-/*struct MinHeapNode *newMinHeapNode(int n, int dist){
+/*
+struct MinHeapNode *newMinHeapNode(int n, int dist){
     struct MinHeapNode *minHeapNode = (struct MinHeapNode*)malloc(sizeof(struct MinHeapNode));
 
     minHeapNode->n = n;
