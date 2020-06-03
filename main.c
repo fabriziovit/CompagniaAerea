@@ -338,10 +338,14 @@ int main() {
                     printf("username/password errate!Riprova.\n");
                 } else if(EffettuaAccesso(username, password) == 1) {
                     int sceltaUtente = 1;
+                    int sceltaPrenotazione = 1;
+                    int sceltaTipo = 1;
+                    char cittaPartenza[100];
+                    char cittaDestinazione[100];
                     printf("%s ha effettuato correttamente l'accesso!\n", username);
                     //poter scegliere e visualizzare i voli
                     do {
-                        if ((scelta > 0) && (scelta < 4)) {
+                        if ((sceltaUtente > 0) && (sceltaUtente < 4)) {
                             printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
                             printf("1. Visualizza voli.\n");
                             printf("2. Prenota un volo.\n");
@@ -358,9 +362,87 @@ int main() {
                                 stampaVoli(G, L);
                                 break;
                             case 2:
-                                //Possibilita di prenotare un volo un altro switch all'interno di questo case con possibilita di tornare indietro
-                                //AggiungiPrenotazioniDB(partenza, destinazione, utente);
-                                //Oppure scegliere gli algoritmi, piu economico, piu veloce
+                                do {
+                                    if ((sceltaPrenotazione > 0) && (sceltaPrenotazione < 3)) {
+                                        printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                                        printf("1. Inserisci andata e Ritorno.\n");
+                                        printf("2. Inserisci solo andata.\n");
+                                        printf("3. Torna indietro.\n");
+                                    } else {
+                                        printf("Riprova! Hai inserito un numero non valido.\n");
+                                    }
+                                }while(sceltaPrenotazione <=0 || sceltaPrenotazione > 3);
+                                if(sceltaPrenotazione != 3) {
+                                    scanf("%d", &sceltaPrenotazione);
+                                    getchar();
+                                    switch (sceltaPrenotazione) {
+                                        case 1:
+                                            printf("Inserisci la citta` di partenza:\n");
+                                            gets(cittaPartenza);
+                                            printf("Inserisci la citta` di destinazione:\n");
+                                            gets(cittaDestinazione);
+                                            do {
+                                                if ((sceltaTipo > 0) && (sceltaTipo < 3)) {
+                                                    printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                                                    printf("1. Tratta piu` economica.\n");
+                                                    printf("2. Tratta casuale.\n");
+                                                    printf("3. Annulla prenotazione.\n");
+                                                } else {
+                                                    printf("Riprova! Hai inserito un numero non valido.\n");
+                                                }
+                                            } while ((sceltaTipo <= 0) || (sceltaTipo > 3));
+                                            scanf("%d", &sceltaTipo);
+                                            getchar();
+                                            if (sceltaTipo != 3) {
+                                                switch (sceltaTipo) {
+                                                    case 1:
+                                                        //Tratta economica/breve
+                                                        //Specie di carrello con utilizzo punti bonus
+                                                        //salvataggio nel db
+                                                        break;
+                                                    case 2:
+                                                        //Tratta qualsiasi
+                                                        //Specie di carrello con utilizzo punti bonus
+                                                        //salvataggio nel db
+                                                        break;
+                                                }
+                                            }
+                                            sceltaTipo = 1;
+                                            break;
+                                        case 2:
+                                            printf("Inserisci la citta` di partenza:\n");
+                                            gets(cittaPartenza);
+                                            do {
+                                                if ((sceltaTipo > 0) && (sceltaTipo < 3)) {
+                                                    printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
+                                                    printf("1. Tratta piu` economica.\n");
+                                                    printf("2. Meta` piu` gettonata.\n");
+                                                    printf("3. Annulla prenotazione.\n");
+                                                } else {
+                                                    printf("Riprova! Hai inserito un numero non valido.\n");
+                                                }
+                                            } while ((sceltaTipo <= 0) || (sceltaTipo > 3));
+                                            if (sceltaTipo != 3) {
+                                                scanf("%d", &sceltaTipo);
+                                                getchar();
+                                                switch (sceltaTipo) {
+                                                    case 1:
+                                                        //Tratta economica/breve
+                                                        //Specie di carrello con utilizzo punti bonus
+                                                        //salvataggio nel db
+                                                        break;
+                                                    case 2:
+                                                        //Meta piu gettonata
+                                                        //Specie di carrello con utilizzo punti bonus
+                                                        //salvataggio nel db
+                                                        break;
+                                                }
+                                            }
+                                            sceltaTipo = 1;
+                                            break;
+                                    }
+                                }
+                                sceltaPrenotazione = 1;
                                 break;
                             case 3:
                                 //visualizzare tutte le prenotazioni effettuate
@@ -378,7 +460,7 @@ int main() {
                     char codiceDest[10];
                     printf("L'admin %s ha effettuato correttamente l'accesso!\n", username);
                     do {
-                        if ((scelta > 0) && (scelta < 5)) {
+                        if ((sceltaAdmin > 0) && (sceltaAdmin < 5)) {
                             printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
                             printf("1. Visualizza voli.\n");
                             printf("2. Aggiungere nuovi aereporti.\n");
