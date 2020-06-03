@@ -17,7 +17,7 @@ typedef struct edge {
 
 typedef struct ArrayNode{
     int n;
-    Edge **adj;
+    struct Edge **adj;
 }Graph;
 
 

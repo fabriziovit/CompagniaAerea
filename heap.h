@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <malloc.h>
 
-
-/*struct MinHeapNode{
+/*
+struct MinHeapNode{
     int dist;
     int n;
 };
