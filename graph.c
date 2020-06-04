@@ -3,7 +3,7 @@
 //
 
 #include "graph.h"
-#include "heap.h"
+#include "queue.h"
 
 void creaNodo(Graph *G){
     int ind = 0;
@@ -86,7 +86,7 @@ void stampaVoli(Graph *G, aeroporto L){
 }
 
 //CONTROLLARE PER L'ULTIMA FASE
-/*void Dijkstra(Graph *G, int src){
+void Dijkstra(Graph *G, int src){
     int N = G->n;
     int dist[N];
     struct MinHeap *minHeap = createMinHeap(N);
@@ -119,4 +119,4 @@ void stampaVoli(Graph *G, aeroporto L){
         }
     }
     printArr(dist, N);
-}*/
+}
