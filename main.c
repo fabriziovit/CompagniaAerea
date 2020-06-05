@@ -507,30 +507,33 @@ int main() {
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
-                                    printf("Inserisci il codice dell'aeroporto di partenza:\n");
-                                    gets(codice);
-                                    if(trovaArray(L, codice) != -1) {
-                                        indice = trovaArray(L, codice) - 1;
-                                        printf("Inserisci il codice dell'aeroporto di destinazione:\n");
-                                        gets(codiceDest);
-                                        if (trovaArray(L, codiceDest) != -1) {
-                                            indiceDest = trovaArray(L, codiceDest);
+                                printf("Inserisci il codice dell'aeroporto di partenza:\n");
+                                gets(codice);
+                                if(trovaArray(L, codice) != -1) {
+                                    indice = trovaArray(L, codice) - 1;
+                                    printf("Inserisci il codice dell'aeroporto di destinazione:\n");
+                                    gets(codiceDest);
+                                    if (trovaArray(L, codiceDest) != -1) {
+                                        indiceDest = trovaArray(L, codiceDest);
+                                        if(strcmp(codice, codiceDest) != 0){
                                             if (trovaCitta(L, codiceDest) != NULL) {
                                                 strcpy(citta, trovaCitta(L, codiceDest));
                                                 printf("Inserisci i km tra i due aeroporti:\n");
                                                 scanf("%d", &km);
                                                 getchar();
-                                                if(presente(G, codiceDest, indice) == 0){
-                                                    Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);
+                                                if (presente(G, codiceDest, indice) == 0) {
+                                                    Aggiungi(G, citta, codiceDest, km, 1, indiceDest, indice);
                                                     printf("Tratta creata correttamente!\n");
                                                 } else
                                                     printf("Errore!Tratta gia` esistente!\n");
-                                            }else
+                                            } else
                                                 printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
-                                        } else
-                                            printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
+                                        }else
+                                            printf("ERRORE! L'aeroporto di partenza non puo` essere uguale a quello di destinazione.\n");
                                     } else
                                         printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
+                                } else
+                                    printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
                                 break;
                             case 4:
                                 //Rimuovere un arco con funzione rimuovi
