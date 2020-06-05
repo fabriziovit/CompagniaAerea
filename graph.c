@@ -93,6 +93,7 @@ int presente(Graph *G, char *codiceAeroporto, int index){
     return 0;
 }
 
+
 /*
 //CONTROLLARE PER L'ULTIMA FASE
 void Dijkstra(Graph *G, int src) {

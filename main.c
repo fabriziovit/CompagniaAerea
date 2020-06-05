@@ -143,40 +143,24 @@ void AggiungiPrenotazioniDB(char partenza[100], char destinazione[100], char ute
 }
 
 //funzione per salvare le modifiche avvenute nelle strutture dati e salvare i cambiamenti nel database
-void saveToDatabase(aeroporto *L, Graph *P) {
+void saveToDatabase(aeroporto *L, Graph *G) {
     char *sql;
     int rc;
     sqlite3_stmt *stmt;
     aeroporto temp = *L;
 
-/*
+
     if (!temp) {
         printf("Salvataggio non effettuato, la lista e' vuota\n");
     } else {
         while (temp!=NULL){
-            if(temp->is_present == 0){
+            if(temp->inserito == 1){
                 //insert
-                sql="INSERT INTO LIBRI(ID, TITOLO, AUTORE, QUANTITA) VALUES(?1,?2,?3,?4);";
+                sql="INSERT INTO AEROPORTO(CODAERO, CITTA) VALUES(?1,?2);";
                 sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-                sqlite3_bind_int(stmt, 1, temp->codiceLibro);
-                sqlite3_bind_text(stmt, 2, temp->titolo, -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 3, temp->autore, -1, SQLITE_STATIC);
-                sqlite3_bind_int(stmt, 4, temp->quantita);
+                sqlite3_bind_text(stmt, 1, temp->codiceAeroporto, -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 2, temp->citta, -1, SQLITE_STATIC);
 
-                rc = sqlite3_step(stmt);
-                if (rc != SQLITE_DONE) {
-                    printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
-                    sqlite3_close(db);
-                    exit(-1);
-                }
-                sqlite3_finalize(stmt);
-            }
-            else if(temp->is_present==2){
-                //update
-                sql="UPDATE LIBRI SET QUANTITA = ?1 WHERE ID= ?2";
-                sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-                sqlite3_bind_int(stmt, 1, temp->quantita);
-                sqlite3_bind_int(stmt, 2, temp->codiceLibro);
                 rc = sqlite3_step(stmt);
                 if (rc != SQLITE_DONE) {
                     printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
@@ -189,24 +173,25 @@ void saveToDatabase(aeroporto *L, Graph *P) {
         }
     }
 
-    if (!P) {
+    if (!G) {
         printf("Salvataggio non effettuato, non ci sono richieste in pending\n");
     } else {
-        Queue *e;
+        Edge *e;
         int i;
-        int id;
-        for (i = 0; i < P->n; i++) {
-            e = P->q[i];
-            id = TrovaIDByIndex(*L, i);
+        char aeroportoPartenza[10];
+        for (i = 0; i < G->n; i++) {
+            e = (Edge *) G->adj[i];
+            strcpy(aeroportoPartenza, trovaCodice(*L, i+1));
             while (e!=NULL) {
-                if(e->inseritoRT == 1) {
-                    sql = "INSERT INTO RICHIESTE(ID, MATRICOLA) VALUES(?1,?2);";
+                if(e->inserito == 1) {
+                    sql = "INSERT INTO TRATTE(AEROPART, AERODEST, KM) VALUES(?1,?2,?3);";
                     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-                    sqlite3_bind_int(stmt, 1, id);
-                    sqlite3_bind_text(stmt, 2, e->matricola, -1, SQLITE_STATIC);
+                    sqlite3_bind_text(stmt, 1, aeroportoPartenza, -1, SQLITE_STATIC);
+                    sqlite3_bind_text(stmt, 2, e->codice, -1, SQLITE_STATIC);
+                    sqlite3_bind_int(stmt, 3, e->km);
                     rc = sqlite3_step(stmt);
                     if (rc != SQLITE_DONE) {
-                        printf("ERROR inserting data: %s\n", sqlite3_errmsg(db));
+                        printf("ERRORE: %s\n", sqlite3_errmsg(db));
                         sqlite3_close(db);
                         exit(-1);
                     }
@@ -216,8 +201,7 @@ void saveToDatabase(aeroporto *L, Graph *P) {
             }
         }
         free(e);
-    }*/
-//Da vedere per salvare nel db alla fine del programma
+    }
 }
 
 void EffettuaRegistrazione(char username[], char nome[], char cognome[], char password[]){
@@ -556,6 +540,8 @@ int main() {
                 break;
         }
     }while (scelta != 3);
-    //saveToDatabase(&L, G);
+    saveToDatabase(&L, G);
+    free(G);
+    free(L);
     sqlite3_close(db);
 }

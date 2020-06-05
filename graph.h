@@ -26,5 +26,4 @@ void Aggiungi(Graph *P, char cittadestinazione[], char codice[], int km, int ins
 void Rimuovi (Graph *G, int index, char *codice);
 void stampaVoli(Graph *G, aeroporto L);
 int presente(Graph *G, char *codiceAeroporto, int index);
-
 //void Dijkstra(Graph *G, int src);
