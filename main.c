@@ -50,7 +50,7 @@ void initStruct(Graph *G, aeroporto *L) {
             sqlite3_close(db);
             exit(-1);
         } else {
-            G->adj = (Edge **) malloc(index * sizeof(Edge *));
+            G->adj = (struct Edge **) (Edge **) malloc(index * sizeof(Edge *));
             if ((G->adj == NULL) && (index > 0)) {
                 printf("ERRORE: impossibile allocare memoria per la lista del grafo\n");
                 free(G);
@@ -65,13 +65,21 @@ void initStruct(Graph *G, aeroporto *L) {
         G->n = index;
         G->adj = NULL;
     }
-
-//query per caricare tutti i voli nel grafo quindi fare una query where indice array trovi con un join tra aeroporto e tratte su aeroporto e
-// caricare con aggiungi la citta di destinazione in base al naeropo e il numero di km da db
-//index = naeropo;
-//km da prendere
-//Aggiungi(G,cittadestinazione, km, 0, index);
-//sqlite3_finalize(stmt);
+    char codicePartenza[10];
+    char cittadestinazione[100];
+    char codiceDestinazione[10];
+    int dbindex;
+    int ind;
+    sqlite3_prepare_v2(db, "select * from TRATTE;", -1, &stmt, NULL);
+    while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        strcpy(codicePartenza, (char*)sqlite3_column_text(stmt, 1));
+        ind = trovaArray(*L, codicePartenza);
+        strcpy(codiceDestinazione, (char*)sqlite3_column_text(stmt, 2));
+        dbindex = trovaArray(*L, codiceDestinazione);
+        trovaCitta(*L, codiceDestinazione);
+        Aggiungi(G, cittadestinazione, codiceDestinazione, sqlite3_column_int(stmt, 3), 0, dbindex, ind-1);
+    }
+    sqlite3_finalize(stmt);
 }
 
 
@@ -458,12 +466,13 @@ int main() {
                     int indiceDest;
                     int km;
                     char codiceDest[10];
+                    int pres = 0;
                     printf("L'admin %s ha effettuato correttamente l'accesso!\n", username);
                     do {
                         if ((sceltaAdmin > 0) && (sceltaAdmin < 5)) {
                             printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
                             printf("1. Visualizza voli.\n");
-                            printf("2. Aggiungere nuovi aereporti.\n");
+                            printf("2. Aggiungere nuovo aereporto.\n");
                             printf("3. Aggiungere nuovo volo.\n");
                             printf("4. Rimuovere un volo.\n");
                             printf("5. Effettuare il Logout.\n");
@@ -479,19 +488,25 @@ int main() {
                                 stampaVoli(G, L);//da fixare non funziona
                                 break;
                             case 2:
-                                //Aggiungere nuovo nodo con funzione creaNodo
-                                printf("Inserisci il codice dell'aeroporto:\n");
-                                gets(codice);
-                                printf("Inserisci la citta` dove si trova l'aeroporto:\n");
-                                gets(citta);
-                                //salvataggio nel db al termine del programma
-                                indice = G->n+1;
+                                do {
+                                    //Aggiungere nuovo nodo con funzione creaNodo
+                                    printf("Inserisci il codice dell'aeroporto:\n");
+                                    gets(codice);
+                                    printf("Inserisci la citta` dove si trova l'aeroporto:\n");
+                                    gets(citta);
+                                    if (trovaArray(L, codice) == -1)
+                                        pres = 1;
+                                    else
+                                        printf("Aeroporto gia` esistente, inserisci un altro codice!\n");
+                                }while(pres == 0);
+                                pres = 0;
+                                indice = G->n + 1;
                                 inserisciCoda(&L, indice, codice, citta, 1);
                                 creaNodo(G);
+                                printf("Aeoroporto aggiunto con successo!\n");
                                 break;
                             case 3:
                                 //Aggiungere nuovo arco con funzione Aggiungi
-                                do{
                                     printf("Inserisci il codice dell'aeroporto di partenza:\n");
                                     gets(codice);
                                     if(trovaArray(L, codice) != -1) {
@@ -505,16 +520,17 @@ int main() {
                                                 printf("Inserisci i km tra i due aeroporti:\n");
                                                 scanf("%d", &km);
                                                 getchar();
-                                                Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);
+                                                if(presente(G, codiceDest, indice) == 0){
+                                                    Aggiungi(G, citta, codiceDest, km, 1 ,indiceDest, indice);
+                                                    printf("Tratta creata correttamente!\n");
+                                                } else
+                                                    printf("Errore!Tratta gia` esistente!\n");
                                             }else
-                                                printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
-                                        } else{
-                                            printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
-                                        }
-                                    } else{
-                                        printf("Il codice inserito non corrisponde a nessun aereo!Riprova.\n");
-                                    }
-                                }while (trovaArray(L, codice) == 0 || trovaCitta(L, codiceDest) == NULL);
+                                                printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
+                                        } else
+                                            printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
+                                    } else
+                                        printf("ERRORE! Il codice inserito non corrisponde a nessun aeroporto.\n");
                                 break;
                             case 4:
                                 //Rimuovere un arco con funzione rimuovi
@@ -537,6 +553,6 @@ int main() {
                 break;
         }
     }while (scelta != 3);
-    //saveToDatabase(&L, P);
+    //saveToDatabase(&L, G);
     sqlite3_close(db);
 }

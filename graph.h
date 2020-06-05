@@ -23,6 +23,8 @@ typedef struct ArrayNode{
 
 void creaNodo(Graph *P);
 void Aggiungi(Graph *P, char cittadestinazione[], char codice[], int km, int insert, int dbindex, int index);
-void Rimuovi (Graph *G, int indedx, char *codice);
+void Rimuovi (Graph *G, int index, char *codice);
 void stampaVoli(Graph *G, aeroporto L);
+int presente(Graph *G, char *codiceAeroporto, int index);
+
 //void Dijkstra(Graph *G, int src);

@@ -5,7 +5,7 @@
 #include "queue.h"
 
 
-Nodo_C *CreaNodo_C(int dbindex){
+/*Nodo_C *CreaNodo_C(int dbindex){
     Nodo_C *tmp = (Nodo_C *)malloc(sizeof(Nodo_C));
 
     if(!tmp)
@@ -79,3 +79,4 @@ int Find_Min(Coda *Q){
     }
     return min;
 }
+*/

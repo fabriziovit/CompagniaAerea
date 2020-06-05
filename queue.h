@@ -9,7 +9,7 @@
 #include <malloc.h>
 
 
-typedef struct Nodo_C{
+/*typedef struct Nodo_C{
     int dbindex;
     struct Nodo_C *next;
 }Nodo_C;
@@ -26,4 +26,4 @@ void CreaCoda(Coda *Q);
 void Inserisci_C(Coda *Q, int dbindex);
 void Eliminazione_C(Coda *Q, int dbindex);
 void EliminaNodo_C(Coda *Q, int dbindex);
-int Find_Min(Coda *Q);
+int Find_Min(Coda *Q);*/

@@ -2,7 +2,7 @@
 // Created by gianl on 05/06/2020.
 //
 
-#ifndef COMPAGNIAAEREA_LIST_H
+/*#ifndef COMPAGNIAAEREA_LIST_H
 #define COMPAGNIAAEREA_LIST_H
 
 #endif //COMPAGNIAAEREA_LIST_H
@@ -52,4 +52,4 @@ void InserisciInTesta_L(Lista *Testa, int dbindex){
         }
     }
     return;
-}
+}*/
