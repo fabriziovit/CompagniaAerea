@@ -4,6 +4,7 @@
 
 #include "graph.h"
 #include "queue.h"
+#include "list.h"
 
 void creaNodo(Graph *G){
     int ind = 0;
@@ -85,38 +86,33 @@ void stampaVoli(Graph *G, aeroporto L){
     }
 }
 
+/*
 //CONTROLLARE PER L'ULTIMA FASE
-void Dijkstra(Graph *G, int src){
-    int N = G->n;
-    int dist[N];
-    struct MinHeap *minHeap = createMinHeap(N);
+void Dijkstra(Graph *G, int src) {
+    int n = G->n;
+    int dist[n];
+    int prev[n];
+    int it, vert;
 
-    for(int n=0; n<N; ++n){
-        dist[n] = INT_MAX;
-        minHeap->array[n] = newMinHeapNode(n, dist[n]);
-        minHeap->pos[n] = n;
+    for (int u = 0; u < n; u++) {
+        dist[u] = INT_MAX;
+        prev[u] = -1;
     }
-
-    minHeap->array[src] = newMinHeapNode(src, dist[src]);
-    minHeap->pos[src] = src;
     dist[src] = 0;
-    decreaseKey(minHeap, src, dist[src]);
+    Lista *Testa = NULL;
+    Coda *Q;
+    CreaCoda(&Q);
 
-    minHeap->size = N;
 
-    while(!isEmpty(minHeap)){
-        struct MinHeapNode *minHeapNode = extractMin(minHeap);
-        int u = minHeapNode->n;
-
-        Edge *tmp = G->adj[u];
-        while(tmp != NULL){
-            int v = tmp->dbindex;
-            if(IsInMinHeap(minHeap, v) && dist[u] != INT_MAX && tmp->km + dist[u] < dist[v]) {
-                dist[v] = dist[u] + tmp->km;
-                decreaseKey(minHeap, v, dist[v]);
-            }
-            tmp = tmp->next;
-        }
+    for (int u = 0; u < n; u++) {
+        Inserisci_C(&Q, u);
     }
-    printArr(dist, N);
-}
+    while (!CodaVuota(&Q)){
+        vert = Find_Min(&Q);
+        EliminaNodo_C(&Q, vert);
+        InserisciInTesta_L(&Testa, vert);
+        it++;
+    }
+
+    for();
+}*/

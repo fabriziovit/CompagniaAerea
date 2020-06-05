@@ -10,7 +10,6 @@
 
 
 typedef struct Nodo_C{
-    int km;
     int dbindex;
     struct Nodo_C *next;
 }Nodo_C;
@@ -21,9 +20,10 @@ typedef struct Coda{
 }Coda;
 
 
-Nodo_C *CreaNodo_C(int km, int dbindex);
+Nodo_C *CreaNodo_C(int dbindex);
 bool CodaVuota(Coda *Q);
 void CreaCoda(Coda *Q);
-void Inserisci_C(Coda *Q, int km, int dbindex);
-void Eliminazione_C(Coda *Q, int km, int dbindex);
+void Inserisci_C(Coda *Q, int dbindex);
+void Eliminazione_C(Coda *Q, int dbindex);
 void EliminaNodo_C(Coda *Q, int dbindex);
+int Find_Min(Coda *Q);
