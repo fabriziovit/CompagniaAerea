@@ -4,7 +4,6 @@
 
 #include "graph.h"
 #include "queue.h"
-#include "list.h"
 
 void creaNodo(Graph *G){
     if (G == NULL) {
@@ -93,34 +92,42 @@ int presente(Graph *G, char *codiceAeroporto, int index){
     return 0;
 }
 
+//FUNZIONE PER STAMPARE GLI SHORTEST PATH ALLA FINE
+void printArr(int dist[], int n){
+    for(int i=0;i<n,i++)
+        printf("%d \t\t %d\n", i, dist[i]);
+}
 
 /*
-//CONTROLLARE PER L'ULTIMA FASE
 void Dijkstra(Graph *G, int src) {
     int n = G->n;
     int dist[n];
     int prev[n];
-    int it, vert;
-
-    for (int u = 0; u < n; u++) {
-        dist[u] = INT_MAX;
-        prev[u] = -1;
-    }
-    dist[src] = 0;
-    Lista *Testa = NULL;
+    int vert;
+    Nodo_C *tmp;
     Coda *Q;
     CreaCoda(&Q);
 
-
-    for (int u = 0; u < n; u++) {
-        Inserisci_C(&Q, u);
+    for (int u = 0; u < n; u++) {  //PER OGNI VERTICE SETTARE E INSERIRE NELLA QUEUE
+        dist[u] = INT_MAX;
+        prev[u] = -1;
+        Inserisci_C(&Q, u,G->adj[u]->km);
     }
-    while (!CodaVuota(&Q)){
-        vert = Find_Min(&Q);
+    dist[src] = 0;
+
+    while (!CodaVuota(&Q)) {    //FINCHE' LA CODA NON E' VUOTA TROVARE IL MIN DELLA CODA ED ESTRARLO
+        tmp = Find_Min(&Q);
+        vert = tmp->dbindex;
         EliminaNodo_C(&Q, vert);
-        InserisciInTesta_L(&Testa, vert);
-        it++;
-    }
 
-    for();
-}*/
+        //RELAX PER OGNI VERTICE ADIACENTE AL MIN(TMP)
+        for (tmp = G->adj[vert].begin(); tmp != G->adj[vert].end(); tmp = tmp->next) {
+            if ((dist[vert] + tmp->km) < dist[tmp->km]) {
+                dist[tmp->km] = (dist[vert] + (tmp->km));
+                prev[tmp->km] = vert;
+            }
+        }
+    }
+    printArr(dist, n);
+}
+*/

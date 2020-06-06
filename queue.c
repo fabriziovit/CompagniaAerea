@@ -5,13 +5,14 @@
 #include "queue.h"
 
 
-/*Nodo_C *CreaNodo_C(int dbindex){
+Nodo_C *CreaNodo_C(int dbindex, int km){
     Nodo_C *tmp = (Nodo_C *)malloc(sizeof(Nodo_C));
 
     if(!tmp)
         return NULL;
     else {
         tmp->dbindex = dbindex;
+        tmp->km = km;
         tmp->next = NULL;
     }
     return tmp;
@@ -29,15 +30,15 @@ void CreaCoda(Coda *Q){
     }
 }
 
-void Inserisci_C(Coda *Q, int dbindex){
+void Inserisci_C(Coda *Q, int dbindex, int km){
     Nodo_C *tmp;
 
     if(Q->tail == NULL && Q->head == NULL){
-        Q->head = CreaNodo_C(dbindex);
+        Q->head = CreaNodo_C(dbindex, km);
         Q->tail = Q->head;
         return;
     }else {
-        tmp = CreaNodo_C(dbindex);
+        tmp = CreaNodo_C(dbindex, km);
         if(tmp != NULL) {
             Q->tail->next = tmp;
             Q->tail = tmp;
@@ -64,19 +65,18 @@ void EliminaNodo_C(Coda *Q, int dbindex){
     free(tmp);
 }
 
-int Find_Min(Coda *Q){
+Nodo_C *Find_Min(Coda *Q){
     Nodo_C *q = Q->head;
     Nodo_C *tmp = Q->head;
-    int min = tmp->dbindex;
+    Nodo_C *min = tmp;
 
     while(q != NULL && q->next != NULL){
         tmp = tmp->next;
-        if(tmp->dbindex < q->dbindex)
-            min = q->dbindex;
+        if(tmp->km < q->km)
+            min = q;
         else
-            min = tmp->dbindex;
+            min = tmp;
         q = q->next;
     }
     return min;
 }
-*/
