@@ -70,13 +70,14 @@ void initStruct(Graph *G, aeroporto *L) {
     char codiceDestinazione[10];
     int dbindex;
     int ind;
+
     sqlite3_prepare_v2(db, "select * from TRATTE;", -1, &stmt, NULL);
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         strcpy(codicePartenza, (char*)sqlite3_column_text(stmt, 1));
         ind = trovaArray(*L, codicePartenza);
         strcpy(codiceDestinazione, (char*)sqlite3_column_text(stmt, 2));
         dbindex = trovaArray(*L, codiceDestinazione);
-        trovaCitta(*L, codiceDestinazione);
+        strcpy(cittadestinazione, trovaCitta(*L, codiceDestinazione));
         Aggiungi(G, cittadestinazione, codiceDestinazione, sqlite3_column_int(stmt, 3), 0, dbindex, ind-1);
     }
     sqlite3_finalize(stmt);
@@ -280,6 +281,20 @@ void visualizzaPrenotazioni(char *username){
     sqlite3_finalize(stmt);
 }
 
+char *MetaGettonata(char *codicePartenza){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT COUNT(*) as count, p.AERODEST from prenotato as p WHERE p.AEROPART = ?1 GROUP BY p.AERODEST ORDER BY count DESC;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, codicePartenza, -1, SQLITE_STATIC);
+    if((rc = sqlite3_step(stmt)) == SQLITE_ROW){
+        return (char*)sqlite3_column_text(stmt, 1);
+    }
+    return NULL;
+}
+
+
 int main() {
     char username[MAX];
     char nome[MAX], cognome[MAX];
@@ -334,6 +349,10 @@ int main() {
                     int sceltaTipo = 1;
                     char cittaPartenza[100];
                     char cittaDestinazione[100];
+                    char codicePartenza[10];
+                    char codiceDestinazione[10];
+                    int indice;
+                    char continuaPrenotazione;
                     printf("%s ha effettuato correttamente l'accesso!\n", username);
                     //poter scegliere e visualizzare i voli
                     do {
@@ -425,8 +444,29 @@ int main() {
                                                         break;
                                                     case 2:
                                                         //Meta piu gettonata
-                                                        //Specie di carrello con utilizzo punti bonus
-                                                        //salvataggio nel db
+                                                        if(trovaCodiceDaCitta(L, cittaPartenza) != NULL){
+                                                            strcpy(codicePartenza, trovaCodiceDaCitta(L,cittaPartenza));
+                                                            if(MetaGettonata(codicePartenza) != NULL) {
+                                                                strcpy(codiceDestinazione, MetaGettonata(codicePartenza));
+                                                                strcpy(cittaDestinazione, trovaCitta(L, codiceDestinazione));
+                                                                printf("La citta` piu gettonata al momento e` %s vuoi continuare la prenotazione? y/n\n", cittaDestinazione);
+                                                                scanf("%c", &continuaPrenotazione);
+                                                                getchar();
+                                                                if(continuaPrenotazione == 'y'){
+                                                                    /*prendere la tratta, i km e calcolare il prezzo km*2.5
+                                                                    vedere se l'utente ha dei puntie chierdere se vuole utilizzarli
+                                                                    if(continuaprenotazione == 'y'){
+                                                                        scali una percentuale sul prezzo totale es: ogni 150 punti sono il 10%,di 10 in 10, fino a un max di 50% cioe 750 punti
+                                                                     }altrimenti nessuno sconto
+                                                                    viene effettuato il salvataggio nel db della prenotazione(username, aeropart, aerodest)
+                                                                    e vengono caricati i punti guadagnati per questa prenotazione cioe km/15.
+                                                                     */
+                                                                } else
+                                                                    printf("Prenotazione annullata. Tornerai al menu` delle prenotazioni.\n");
+                                                            } else
+                                                                printf("Non esiste nessuna meta gettonata per la citta inserita!\n");
+                                                        }else
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata!\n");
                                                         break;
                                                 }
                                             }

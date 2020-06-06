@@ -92,11 +92,22 @@ int presente(Graph *G, char *codiceAeroporto, int index){
     return 0;
 }
 
+int getKm(Graph *G, char codiceDestinazione[10], int index){
+    Edge *e;
+    e = (Edge *) G->adj[index];
+    while(e != NULL){
+        if(strcmp(e->codice, codiceDestinazione) == 0)
+            return e->km;
+        e = e->next;
+    }
+    return -1;
+}
+
 //FUNZIONE PER STAMPARE GLI SHORTEST PATH ALLA FINE
-void printArr(int dist[], int n){
+/*void printArr(int dist[], int n){
     for(int i=0;i<n,i++)
         printf("%d \t\t %d\n", i, dist[i]);
-}
+}*/
 
 /*
 void Dijkstra(Graph *G, int src) {

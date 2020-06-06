@@ -68,3 +68,13 @@ char *trovaCitta(aeroporto L, char codice[10]){
     }
     return NULL;
 }
+
+char *trovaCodiceDaCitta(aeroporto L, char citta[100]){
+    while(L){
+        if(strcmp(L->citta, citta) == 0)
+            return L->codiceAeroporto;
+        else
+            L=L->next;
+    }
+    return NULL;
+}

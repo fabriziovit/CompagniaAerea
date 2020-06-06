@@ -80,9 +80,6 @@
 		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.h">
 			<Option target="CompagniaAerea"/>
 		</Unit>
-		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/list.h">
-			<Option target="CompagniaAerea"/>
-		</Unit>
 		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/listAeroporti.c">
 			<Option target="CompagniaAerea"/>
 		</Unit>

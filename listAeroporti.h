@@ -17,3 +17,4 @@ void printList(aeroporto L);
 int trovaArray(aeroporto L, char codice[10]);
 char *trovaCodice(aeroporto L, int indexDB);
 char *trovaCitta(aeroporto L, char codice[10]);
+char *trovaCodiceDaCitta(aeroporto L, char citta[100]);
