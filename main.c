@@ -111,7 +111,7 @@ void creaDatabase(Graph *G , aeroporto *L){
             sql = "CREATE TABLE IF NOT EXISTS UTENTI(USERNAME TEXT PRIMARY KEY, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL, PUNTI INT NOT NULL);"
                   "CREATE TABLE IF NOT EXISTS AEROPORTO(NAEROPO INTEGER PRIMARY KEY AUTOINCREMENT, CODAERO TEXT NOT NULL, CITTA TEXT);"
                   "CREATE TABLE IF NOT EXISTS TRATTE(TRATTA INTEGER PRIMARY KEY AUTOINCREMENT, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, KM INT NOT NULL);"
-                  "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL) ;";
+                  "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, PREZZO DOUBLE NOT NULL);";
             rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
             if (rc != SQLITE_OK) {
                 printf("SQL error: %s\n", zErrMsg);
@@ -275,7 +275,7 @@ void visualizzaPrenotazioni(char *username){
     sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
     printf("Prenotazioni effettuate:\n");
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-        printf("Volo da %s a %s.\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3));
+        printf("Volo da %s a %s. Prezzo pagato: %.2f\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3), sqlite3_column_double(stmt, 4));
     }
     printf("\n");
     sqlite3_finalize(stmt);
@@ -293,6 +293,57 @@ char *MetaGettonata(char *codicePartenza){
     }
     return NULL;
 }
+
+int getPunti(char *username){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "SELECT PUNTI FROM UTENTI WHERE USERNAME = ?1;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    if((rc = sqlite3_step(stmt)) == SQLITE_ROW){
+        return sqlite3_column_int(stmt, 0);
+    }
+    return 0;
+}
+
+void salvaPrenotazione(char *username, char *codicePartenza, char *codiceDestinazione, double prezzototale){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "INSERT INTO PRENOTATO(USERNAME, AEROPART , AERODEST, PREZZO) VALUES(?1, ?2, ?3, ?4);";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, codicePartenza, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, codiceDestinazione, -1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 4, prezzototale);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        printf("Exit");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+    printf("Prenotazione effettuata correttamente!\n");
+}
+
+void AggiornaPunti(char *username, int punti){
+    char *sql;
+    int rc;
+    sqlite3_stmt *stmt;
+    sql = "UPDATE UTENTI SET PUNTI = ?1 WHERE USERNAME = ?2;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_int(stmt, 1,punti);
+    sqlite3_bind_text(stmt, 2, username, -1, SQLITE_STATIC);
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        printf("Exit");
+        sqlite3_close(db);
+        exit(-1);
+    }
+    sqlite3_finalize(stmt);
+}
+
 
 
 int main() {
@@ -351,8 +402,12 @@ int main() {
                     char cittaDestinazione[100];
                     char codicePartenza[10];
                     char codiceDestinazione[10];
-                    int indice;
+                    int indicePartenza;
+                    double prezzototale;
                     char continuaPrenotazione;
+                    int punti;
+                    int km;
+                    double sconto;
                     printf("%s ha effettuato correttamente l'accesso!\n", username);
                     //poter scegliere e visualizzare i voli
                     do {
@@ -453,20 +508,69 @@ int main() {
                                                                 scanf("%c", &continuaPrenotazione);
                                                                 getchar();
                                                                 if(continuaPrenotazione == 'y'){
-                                                                    /*prendere la tratta, i km e calcolare il prezzo km*2.5
-                                                                    vedere se l'utente ha dei puntie chierdere se vuole utilizzarli
-                                                                    if(continuaprenotazione == 'y'){
-                                                                        scali una percentuale sul prezzo totale es: ogni 150 punti sono il 10%,di 10 in 10, fino a un max di 50% cioe 750 punti
-                                                                     }altrimenti nessuno sconto
-                                                                    viene effettuato il salvataggio nel db della prenotazione(username, aeropart, aerodest)
-                                                                    e vengono caricati i punti guadagnati per questa prenotazione cioe km/15.
-                                                                     */
+                                                                    indicePartenza = trovaArray(L, codicePartenza) -1;
+                                                                    km = getKm(G, codiceDestinazione, indicePartenza);
+                                                                    prezzototale = km * 2.5;
+                                                                    punti = getPunti(username);
+                                                                    if(punti>=150){
+                                                                        printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n", punti);
+                                                                        scanf("%c", &continuaPrenotazione);
+                                                                        getchar();
+                                                                        if(continuaPrenotazione == 'y'){
+                                                                            if(punti >= 150 && punti < 300){
+                                                                                //10% di sconto
+                                                                                sconto = 0.1 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 150;
+                                                                                //diminuzione dei punti di 150
+                                                                                printf("Nuovo prezzo con sconto: %.2f", prezzototale);
+                                                                            }else if(punti >=300 && punti <450){
+                                                                                //20% di sconto
+                                                                                sconto = 0.2 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 300;
+                                                                                //diminuzione dei punti di 300
+                                                                                printf("Nuovo prezzo con sconto: %.2f", prezzototale);
+                                                                            } else if(punti >=450 && punti <600){
+                                                                                //30% di sconto
+                                                                                sconto = 0.3 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 450;
+                                                                                //diminuzione dei punti di 450
+                                                                                printf("Nuovo prezzo con sconto: %.2f", prezzototale);
+                                                                            } else if(punti >=600 && punti <750){
+                                                                                //40% di sconto
+                                                                                sconto = 0.4 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 600;
+                                                                                //diminuzione dei punti di 600
+                                                                                printf("Nuovo prezzo con sconto: %.2f", prezzototale);
+                                                                            } else if(punti >= 750){
+                                                                                //50% di sconto
+                                                                                sconto = 0.5 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 750;
+                                                                                //diminuzione dei punti di 750
+                                                                                printf("Nuovo prezzo con sconto: %.2f", prezzototale);
+                                                                            }
+                                                                        }
+                                                                    } else{
+                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\nPrezzo totale: %.2f\n", prezzototale);
+                                                                    }
+                                                                    int puntitotali  = punti;
+                                                                    salvaPrenotazione(username, codicePartenza, codiceDestinazione, prezzototale);
+                                                                    punti = (km / 15);
+                                                                    puntitotali += punti;
+                                                                    printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n", punti, puntitotali);
+                                                                    AggiornaPunti(username, puntitotali);
                                                                 } else
                                                                     printf("Prenotazione annullata. Tornerai al menu` delle prenotazioni.\n");
                                                             } else
                                                                 printf("Non esiste nessuna meta gettonata per la citta inserita!\n");
-                                                        }else
-                                                            printf("Non esiste nessun aeroporto nella citta` indicata!\n");
+                                                        }else {
+                                                            //Magari possibile trovare una soluzione alternativa
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Oppure non esiste nessuna meta gettonata per la citta inserita.\n");
+                                                        }
                                                         break;
                                                 }
                                             }
