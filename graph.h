@@ -29,3 +29,5 @@ int presente(Graph *G, char *codiceAeroporto, int index);
 //void Dijkstra(Graph *G, int src);
 //void printArr(int dist[], int n);
 int getKm(Graph *G, char codiceDestinazione[10], int index);
+char *TrovaMinKm(Graph *G,int index, aeroporto L);
+int haTratta(Graph *G, int index);

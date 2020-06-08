@@ -493,9 +493,85 @@ int main() {
                                                 getchar();
                                                 switch (sceltaTipo) {
                                                     case 1:
-                                                        //Tratta economica/breve
-                                                        //Specie di carrello con utilizzo punti bonus
-                                                        //salvataggio nel db
+                                                        if(trovaCodiceDaCitta(L, cittaPartenza) != NULL){
+                                                            strcpy(codicePartenza, trovaCodiceDaCitta(L,cittaPartenza));
+                                                            indicePartenza = trovaArray(L, codicePartenza)-1;
+                                                            if(haTratta(G, indicePartenza) == 1) {
+                                                                strcpy(codiceDestinazione,TrovaMinKm(G, indicePartenza, L));
+                                                                strcpy(cittaDestinazione,trovaCitta(L, codiceDestinazione));
+                                                                printf("La citta` piu gettonata al momento e` %s vuoi continuare la prenotazione? y/n\n",cittaDestinazione);
+                                                                scanf("%c", &continuaPrenotazione);
+                                                                getchar();
+                                                                if (continuaPrenotazione == 'y') {
+                                                                    km = getKm(G, codiceDestinazione, indicePartenza);
+                                                                    prezzototale = km * 2.5;
+                                                                    punti = getPunti(username);
+                                                                    if (punti >= 150) {
+                                                                        printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n",
+                                                                               punti);
+                                                                        scanf("%c", &continuaPrenotazione);
+                                                                        getchar();
+                                                                        if (continuaPrenotazione == 'y') {
+                                                                            if (punti >= 150 && punti < 300) {
+                                                                                //10% di sconto
+                                                                                sconto = 0.1 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 150;
+                                                                                //diminuzione dei punti di 150
+                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                       prezzototale);
+                                                                            } else if (punti >= 300 && punti < 450) {
+                                                                                //20% di sconto
+                                                                                sconto = 0.2 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 300;
+                                                                                //diminuzione dei punti di 300
+                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                       prezzototale);
+                                                                            } else if (punti >= 450 && punti < 600) {
+                                                                                //30% di sconto
+                                                                                sconto = 0.3 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 450;
+                                                                                //diminuzione dei punti di 450
+                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                       prezzototale);
+                                                                            } else if (punti >= 600 && punti < 750) {
+                                                                                //40% di sconto
+                                                                                sconto = 0.4 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 600;
+                                                                                //diminuzione dei punti di 600
+                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                       prezzototale);
+                                                                            } else if (punti >= 750) {
+                                                                                //50% di sconto
+                                                                                sconto = 0.5 * prezzototale;
+                                                                                prezzototale -= sconto;
+                                                                                punti = punti - 750;
+                                                                                //diminuzione dei punti di 750
+                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                       prezzototale);
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\nPrezzo totale: %.2f\n",
+                                                                               prezzototale);
+                                                                    }
+                                                                    int puntitotali = punti;
+                                                                    salvaPrenotazione(username, codicePartenza,
+                                                                                      codiceDestinazione, prezzototale);
+                                                                    punti = (km / 15);
+                                                                    puntitotali += punti;
+                                                                    printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n",
+                                                                           punti, puntitotali);
+                                                                    AggiornaPunti(username, puntitotali);
+                                                                } else
+                                                                    printf("Prenotazione annullata. Tornerai al menu` delle prenotazioni.\n");
+                                                            }
+                                                        }else{
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Oppure non esiste nessuna meta gettonata per la citta inserita.\n");
+                                                        }
                                                         break;
                                                     case 2:
                                                         //Meta piu gettonata
@@ -568,7 +644,6 @@ int main() {
                                                             } else
                                                                 printf("Non esiste nessuna meta gettonata per la citta inserita!\n");
                                                         }else {
-                                                            //Magari possibile trovare una soluzione alternativa
                                                             printf("Non esiste nessun aeroporto nella citta` indicata! Oppure non esiste nessuna meta gettonata per la citta inserita.\n");
                                                         }
                                                         break;

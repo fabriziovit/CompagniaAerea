@@ -9,18 +9,10 @@ void creaNodo(Graph *G){
     if (G == NULL) {
         printf("ERRORE: impossibile la lista e vuota\n");
     } else {
-        /*if (G->adj == NULL){
-            G->adj = (Edge **) malloc(sizeof(Edge *));
             G->adj[G->n] = NULL;
-            //Aggiungi?
-            G->n++;
-        }else {*/
-            G->adj[G->n] = NULL;
-            //Aggiungi?
             G->n++;
         }
     }
-    //return ind;
 
 
 void Aggiungi(Graph *G, char cittadestinazione[], char codice[], int km, int insert,int dbindex, int index){
@@ -103,6 +95,36 @@ int getKm(Graph *G, char codiceDestinazione[10], int index){
     return -1;
 }
 
+char *TrovaMinKm(Graph *G,int index, aeroporto L){
+    Edge *e;
+    int min;
+    int indicemin;
+    e = (Edge *) G->adj[index];
+    min = e->km;
+    indicemin = e->dbindex;
+    if(e->next!=NULL) {
+        e = e->next;
+        while (e != NULL) {
+            if (min > e->km) {
+                indicemin = e->dbindex;
+                min = e->km;
+                e = e->next;
+            } else
+                e = e->next;
+        }
+    }
+    return trovaCodice(L, indicemin);
+}
+
+int haTratta(Graph *G, int index){
+    Edge *e;
+    e = (Edge *) G->adj[index];
+    if(e->next)
+        return 1;
+    else
+        return 0;
+}
+
 //FUNZIONE PER STAMPARE GLI SHORTEST PATH ALLA FINE
 /*void printArr(int dist[], int n){
     for(int i=0;i<n,i++)
@@ -142,3 +164,76 @@ void Dijkstra(Graph *G, int src) {
     printArr(dist, n);
 }
 */
+/*struct nodoQ {
+    int info;
+    struct nodoQ *next;
+};
+
+int estrai_min(struct nodoQ **primo, int d[]) {
+    struct nodoQ *p, *pmin, *prec=NULL, *precmin=NULL;
+    int u;
+    pmin = *primo;
+    p = *primo;
+    while (p != NULL) {
+        if ((d[p->info] != 65535 && d[p->info] < d[pmin->info]) || d[pmin->info] == 65535) {
+            pmin = p;
+            precmin = prec;
+        }
+        prec = p;
+        p = p->next;
+    }
+    u = pmin->info;
+
+    if (precmin == NULL)
+        *primo = (*primo)->next;
+    else
+        precmin->next = pmin->next;
+    free(pmin);
+
+    return(u);
+}
+
+void accoda(struct nodoQ **primo, int v) {
+    struct nodoQ *p;
+    p = malloc(sizeof(struct nodoQ));
+    p->info = v;
+    p->next = *primo;
+    *primo = p;
+    return;
+}
+
+void Dijkstra(Graph *G) {
+    int d[50], pi[50];
+    int n;
+    int v;
+    int u, s;
+    aeroporto q, primo;
+    Edge *e;
+    n = G->n;
+    for (v = 0; v < n; v++) {
+        d[v] = 65535;
+        pi[v] = -1;
+    }
+
+    printf("Sorgente: ");
+    scanf("%d", &s);
+    d[s] = 0;
+
+    for (v = 0; v < n; v++)
+        accoda(&primo, v);
+
+    while (primo != NULL) {
+        u = estrai_min(&primo, d);
+        e = (Edge *) G->adj[u];
+        while (e != NULL) {
+            if (d[e->info] == 65535 || d[e->km] > d[u] + e->km) {
+                pi[p->info] = u;
+                d[p->info] = d[u] + p->w;
+            }
+            p = p->next;
+        }
+    }
+
+    for (v = 0; v < n; v++)
+        printf("d[%d] = %3d, pi[%d] = %3d\n", v, d[v], v, pi[v]);
+}*/
