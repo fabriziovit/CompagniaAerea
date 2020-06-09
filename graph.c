@@ -5,7 +5,7 @@
 #include "graph.h"
 #include "queue.h"
 #include "Stack.h"
-#define INFINITY 99999
+#define INFINITY 65000
 
 void creaNodo(Graph *G){
     if (G == NULL) {
@@ -144,27 +144,37 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     Stack *S = NULL;
 
     for (int i = 0; i < n; i++) {
-        prev[i] = NULL;
+        prev[i] = 0;
         if(i != src)
             dist[i] = INFINITY;
         else
             dist[src] = 0;
+        printf("OK1\n");
         Inserisci_C(&Q, i);
     }
 
     do{
+        printf("OK2\n");
         u = Find_Min(&Q);
+        printf("OK3\n");
         Pop(S, u);
+        printf("OK4\n");
         EliminaNodo_C(&Q, u);
+        printf("OK5\n");
 
-        for(int v = 0;v < G->adj[u]; v++){
+        for(int v = 0; (struct Edge *) v < G->adj[u]; v++){
+            printf("OK6\n");
             if (dist[v] > (dist[u] + getKm(G, trovaCodice(L, u), v))){
+                printf("OK7\n");
                 dist[v] = (dist[u] + getKm(G, trovaCodice(L, u), v));
                 prev[v] = u;
+                printf("OK8\n");
             }
         }
     }while(!CodaVuota(&Q) || u == target);
+    printf("OK10\n");
     printSP(dist, n);
+    printf("OK1112\n");
 }
 
 /*struct nodoQ {

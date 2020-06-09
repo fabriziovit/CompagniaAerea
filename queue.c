@@ -68,7 +68,6 @@ int Find_Min(Coda *Q){
     Nodo_C *q = Q->head;
     Nodo_C *tmp = Q->head;
     int min = tmp->key;
-
     while(q != NULL && q->next != NULL){
         tmp = tmp->next;
         if(tmp->key < q->key)

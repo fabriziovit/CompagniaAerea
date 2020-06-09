@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/gianl/CLionProjects/CompagniaAerea/graph.c" "C:/Users/gianl/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/graph.c.obj"
-  "C:/Users/gianl/CLionProjects/CompagniaAerea/listAeroporti.c" "C:/Users/gianl/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
-  "C:/Users/gianl/CLionProjects/CompagniaAerea/main.c" "C:/Users/gianl/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/main.c.obj"
-  "C:/Users/gianl/CLionProjects/CompagniaAerea/queue.c" "C:/Users/gianl/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/queue.c.obj"
-  "C:/Users/gianl/CLionProjects/CompagniaAerea/sqlite3.c" "C:/Users/gianl/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj"
+  "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.c" "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/graph.c.obj"
+  "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/listAeroporti.c" "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
+  "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/main.c" "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/main.c.obj"
+  "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/queue.c" "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/queue.c.obj"
+  "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/sqlite3.c" "C:/Users/Fabrizio/CLionProjects/CompagniaAerea/cmake-build-debug/CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

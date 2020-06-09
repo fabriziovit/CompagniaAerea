@@ -44,5 +44,4 @@ void Pop(Stack *Testa, int key){
             Testa->next = tmp;
         }
     }
-    return;
 }
