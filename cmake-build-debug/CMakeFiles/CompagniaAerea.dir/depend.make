@@ -3,6 +3,7 @@
 
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../graph.c
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../graph.h
+CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../list.h
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../listAeroporti.h
 CMakeFiles/CompagniaAerea.dir/graph.c.obj: ../queue.h
 
