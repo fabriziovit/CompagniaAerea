@@ -4,6 +4,8 @@
 
 #include "graph.h"
 #include "queue.h"
+#include "Stack.h"
+#define INFINITY 99999
 
 void creaNodo(Graph *G){
     if (G == NULL) {
@@ -126,44 +128,45 @@ int haTratta(Graph *G, int index){
 }
 
 //FUNZIONE PER STAMPARE GLI SHORTEST PATH ALLA FINE
-/*void printArr(int dist[], int n){
-    for(int i=0;i<n,i++)
+void printArr(int dist[], int n){
+    for(int i=0; i<n ;i++)
         printf("%d \t\t %d\n", i, dist[i]);
-}*/
+}
 
-/*
-void Dijkstra(Graph *G, int src) {
+
+void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     int n = G->n;
     int dist[n];
     int prev[n];
-    int vert;
-    Nodo_C *tmp;
+    int u;
     Coda *Q;
     CreaCoda(&Q);
+    Stack *S = NULL;
 
-    for (int u = 0; u < n; u++) {  //PER OGNI VERTICE SETTARE E INSERIRE NELLA QUEUE
-        dist[u] = INT_MAX;
-        prev[u] = -1;
-        Inserisci_C(&Q, u,G->adj[u]->km);
+    for (int i = 0; i < n; i++) {  //PER OGNI VERTICE SETTARE LE DISTANZE E INSERIRE NELLA QUEUE
+        prev[i] = NULL;
+        if(i != src)
+            dist[i] = INFINITY;
+        else
+            dist[src] = 0;
+        Inserisci_C(&Q, i);
     }
-    dist[src] = 0;
 
-    while (!CodaVuota(&Q)) {    //FINCHE' LA CODA NON E' VUOTA TROVARE IL MIN DELLA CODA ED ESTRARLO
-        tmp = Find_Min(&Q);
-        vert = tmp->dbindex;
-        EliminaNodo_C(&Q, vert);
+    do{    //FINCHE' LA CODA NON E' VUOTA TROVARE IL MIN DELLA CODA ED ESTRARLO
+        u = Find_Min(&Q);
+        Pop(&S, u);
+        EliminaNodo_C(&Q, u);
 
         //RELAX PER OGNI VERTICE ADIACENTE AL MIN(TMP)
-        for (tmp = G->adj[vert].begin(); tmp != G->adj[vert].end(); tmp = tmp->next) {
-            if ((dist[vert] + tmp->km) < dist[tmp->km]) {
-                dist[tmp->km] = (dist[vert] + (tmp->km));
-                prev[tmp->km] = vert;
+        for(int v = 0;v < G->adj[u]; v++){
+            if (dist[v] > (dist[u] + getKm(G, trovaCodice(L, u), v))){
+                dist[v] = (dist[u] + getKm(G, trovaCodice(L, u), v));
+                prev[v] = u;
             }
         }
-    }
+    }while(!CodaVuota(&Q) || u == target);
     printArr(dist, n);
 }
-*/
 /*struct nodoQ {
     int info;
     struct nodoQ *next;
