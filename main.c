@@ -462,6 +462,15 @@ int main() {
                                             if (sceltaTipo != 3) {
                                                 switch (sceltaTipo) {
                                                     case 1:
+                                                        if(trovaCodiceDaCitta(L, cittaPartenza) != NULL) {
+                                                            strcpy(codicePartenza, trovaCodiceDaCitta(L, cittaPartenza));
+                                                            indicePartenza = trovaArray(L, codicePartenza) - 1;
+                                                            if (haTratta(G, indicePartenza) == 1) {
+
+                                                            } else
+                                                                printf("La citta` di partenza indicata non ha tratte!\n");
+                                                        } else
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Riprova inserendo i dati corretti.\n");
                                                         //Tratta economica/breve
                                                         //Specie di carrello con utilizzo punti bonus
                                                         //salvataggio nel db
@@ -568,9 +577,10 @@ int main() {
                                                                     AggiornaPunti(username, puntitotali);
                                                                 } else
                                                                     printf("Prenotazione annullata. Tornerai al menu` delle prenotazioni.\n");
-                                                            }
+                                                            }else
+                                                                printf("La citta` di partenza indicata non ha tratte!\n");
                                                         }else{
-                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Oppure non esiste nessuna meta gettonata per la citta inserita.\n");
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Riprova inserendo i dati corretti.\n");
                                                         }
                                                         break;
                                                     case 2:
