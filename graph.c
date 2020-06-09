@@ -127,8 +127,8 @@ int haTratta(Graph *G, int index){
         return 0;
 }
 
-//FUNZIONE PER STAMPARE GLI SHORTEST PATH ALLA FINE
-void printArr(int dist[], int n){
+
+void printSP(int dist[], int n){
     for(int i=0; i<n ;i++)
         printf("%d \t\t %d\n", i, dist[i]);
 }
@@ -139,11 +139,11 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     int dist[n];
     int prev[n];
     int u;
-    Coda *Q;
+    Coda Q;
     CreaCoda(&Q);
     Stack *S = NULL;
 
-    for (int i = 0; i < n; i++) {  //PER OGNI VERTICE SETTARE LE DISTANZE E INSERIRE NELLA QUEUE
+    for (int i = 0; i < n; i++) {
         prev[i] = NULL;
         if(i != src)
             dist[i] = INFINITY;
@@ -152,12 +152,11 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
         Inserisci_C(&Q, i);
     }
 
-    do{    //FINCHE' LA CODA NON E' VUOTA TROVARE IL MIN DELLA CODA ED ESTRARLO
+    do{
         u = Find_Min(&Q);
         Pop(&S, u);
         EliminaNodo_C(&Q, u);
 
-        //RELAX PER OGNI VERTICE ADIACENTE AL MIN(TMP)
         for(int v = 0;v < G->adj[u]; v++){
             if (dist[v] > (dist[u] + getKm(G, trovaCodice(L, u), v))){
                 dist[v] = (dist[u] + getKm(G, trovaCodice(L, u), v));
@@ -165,8 +164,9 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
             }
         }
     }while(!CodaVuota(&Q) || u == target);
-    printArr(dist, n);
+    printSP(dist, n);
 }
+
 /*struct nodoQ {
     int info;
     struct nodoQ *next;
