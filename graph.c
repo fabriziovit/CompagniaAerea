@@ -154,7 +154,7 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
 
     do{
         u = Find_Min(&Q);
-        Pop(&S, u);
+        Pop(S, u);
         EliminaNodo_C(&Q, u);
 
         for(int v = 0;v < G->adj[u]; v++){

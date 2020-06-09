@@ -28,7 +28,7 @@ Nodo *CreaNodo(int key){
     return tmp;
 }
 
-void InserisciInTesta_L1(Stack *Testa, int key){
+void Pop(Stack *Testa, int key){
     Nodo *tmp = NULL;
 
     if(!Testa->next){
