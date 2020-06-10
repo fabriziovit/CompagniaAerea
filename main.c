@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "sqlite3.h"
 #include "graph.h"
 #define MAX 100
 sqlite3 *db;
@@ -111,7 +110,7 @@ void creaDatabase(Graph *G , aeroporto *L){
             sql = "CREATE TABLE IF NOT EXISTS UTENTI(USERNAME TEXT PRIMARY KEY, PASSWORD TEXT NOT NULL,NOME TEXT NOT NULL, COGNOME TEXT NOT NULL, TIPO TEXT NOT NULL, PUNTI INT NOT NULL);"
                   "CREATE TABLE IF NOT EXISTS AEROPORTO(NAEROPO INTEGER PRIMARY KEY AUTOINCREMENT, CODAERO TEXT NOT NULL, CITTA TEXT);"
                   "CREATE TABLE IF NOT EXISTS TRATTE(TRATTA INTEGER PRIMARY KEY AUTOINCREMENT, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, KM INT NOT NULL);"
-                  "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, PREZZO DOUBLE NOT NULL);";
+                  "CREATE TABLE IF NOT EXISTS PRENOTATO(NPRENOTAZIONE INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT NOT NULL, AEROPART TEXT NOT NULL, AERODEST TEXT NOT NULL, PREZZO DOUBLE NOT NULL, SCALO BOOLEAN);";
             rc = sqlite3_exec(db, sql, 0, 0, &zErrMsg);
             if (rc != SQLITE_OK) {
                 printf("SQL error: %s\n", zErrMsg);
@@ -405,6 +404,7 @@ int main() {
                     int indicePartenza;
                     double prezzototale;
                     char continuaPrenotazione;
+                    int indiceDestinazione;
                     int punti;
                     int km;
                     double sconto;
@@ -448,40 +448,73 @@ int main() {
                                             printf("Inserisci la citta` di destinazione:\n");
                                             gets(cittaDestinazione);
                                             do {
-                                                if ((sceltaTipo > 0) && (sceltaTipo < 3)) {
+                                                if ((sceltaTipo > 0) && (sceltaTipo < 2)) {
                                                     printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
                                                     printf("1. Tratta piu` economica.\n");
-                                                    printf("2. Tratta casuale.\n");
-                                                    printf("3. Annulla prenotazione.\n");
+                                                    printf("2. Annulla prenotazione.\n");
                                                 } else {
                                                     printf("Riprova! Hai inserito un numero non valido.\n");
                                                 }
-                                            } while ((sceltaTipo <= 0) || (sceltaTipo > 3));
+                                            } while ((sceltaTipo <= 0) || (sceltaTipo > 2));
                                             scanf("%d", &sceltaTipo);
                                             getchar();
-                                            if (sceltaTipo != 3) {
+                                            if (sceltaTipo != 2) {
                                                 switch (sceltaTipo) {
                                                     case 1:
-                                                        /*if(trovaCodiceDaCitta(L, cittaPartenza) != NULL) {*/
+                                                        if(trovaCodiceDaCitta(L, cittaPartenza) != NULL) {
                                                             strcpy(codicePartenza, trovaCodiceDaCitta(L, cittaPartenza));
                                                             indicePartenza = trovaArray(L, codicePartenza) - 1;
-                                                            /*if (haTratta(G, indicePartenza) == 1) {
-
+                                                            if (haTratta(G, indicePartenza) == 1) {
+                                                                if(trovaCodiceDaCitta(L, cittaDestinazione) != NULL) {
+                                                                    strcpy(codiceDestinazione,trovaCodiceDaCitta(L, cittaDestinazione));
+                                                                    indiceDestinazione = trovaArray(L, codiceDestinazione) - 1;
+                                                                    punti = getPunti(username);
+                                                                    if(punti>=150){
+                                                                        printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n", punti);
+                                                                        scanf("%c", &continuaPrenotazione);
+                                                                        getchar();
+                                                                        if (continuaPrenotazione == 'y') {
+                                                                            if (punti >= 150 && punti < 300) {
+                                                                                //10% di sconto
+                                                                                punti = punti - 150;
+                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 1, db);
+                                                                                AggiornaPunti(username, punti);
+                                                                            } else if (punti >= 300 && punti < 450) {
+                                                                                //20% di sconto
+                                                                                punti = punti - 300;
+                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 2, db);
+                                                                                AggiornaPunti(username, punti);
+                                                                            } else if (punti >= 450 && punti < 600) {
+                                                                                //30% di sconto
+                                                                                punti = punti - 450;
+                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 3, db);
+                                                                                AggiornaPunti(username, punti);
+                                                                            } else if (punti >= 600 && punti < 750) {
+                                                                                //40% di sconto
+                                                                                punti = punti - 600;
+                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 4, db);
+                                                                                AggiornaPunti(username, punti);
+                                                                            } else if (punti >= 750) {
+                                                                                //50% di sconto
+                                                                                punti = punti - 750;
+                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 5, db);
+                                                                                AggiornaPunti(username, punti);
+                                                                            }
+                                                                        }else{
+                                                                            Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
+                                                                            AggiornaPunti(username, punti);
+                                                                        }
+                                                                    }else {
+                                                                        Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
+                                                                        AggiornaPunti(username, punti);
+                                                                    }
+                                                                } else
+                                                                    printf("La citta` di destinazione indicata non ha aeroporti! Controlla i dati inseriti.\n");
                                                             } else
                                                                 printf("La citta` di partenza indicata non ha tratte!\n");
                                                         } else
-                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Riprova inserendo i dati corretti.\n");*/
-                                                        int indiceDestinazione;
-                                                        strcpy(codiceDestinazione, trovaCodiceDaCitta(L, cittaDestinazione));
-                                                        indiceDestinazione = trovaArray(L, codiceDestinazione) - 1;
-                                                        Dijkstra(G, indicePartenza, indiceDestinazione, L);
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Riprova inserendo i dati corretti.\n");
                                                         //Tratta economica/breve
-                                                        //Specie di carrello con utilizzo punti bonus
-                                                        //salvataggio nel db
-                                                        break;
-                                                    case 2:
-                                                        //Tratta qualsiasi
-                                                        //Specie di carrello con utilizzo punti bonus
                                                         //salvataggio nel db
                                                         break;
                                                 }
@@ -576,8 +609,7 @@ int main() {
                                                                                       codiceDestinazione, prezzototale);
                                                                     punti = (km / 15);
                                                                     puntitotali += punti;
-                                                                    printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n",
-                                                                           punti, puntitotali);
+                                                                    printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n", punti, puntitotali);
                                                                     AggiornaPunti(username, puntitotali);
                                                                 } else
                                                                     printf("Prenotazione annullata. Tornerai al menu` delle prenotazioni.\n");

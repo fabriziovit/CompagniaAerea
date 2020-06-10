@@ -74,9 +74,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/Stack.h">
-			<Option target="CompagniaAerea"/>
-		</Unit>
 		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/graph.c">
 			<Option target="CompagniaAerea"/>
 		</Unit>
@@ -90,12 +87,6 @@
 			<Option target="CompagniaAerea"/>
 		</Unit>
 		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/main.c">
-			<Option target="CompagniaAerea"/>
-		</Unit>
-		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/queue.c">
-			<Option target="CompagniaAerea"/>
-		</Unit>
-		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/queue.h">
 			<Option target="CompagniaAerea"/>
 		</Unit>
 		<Unit filename="C:/Users/Fabrizio/CLionProjects/CompagniaAerea/sqlite3.c">

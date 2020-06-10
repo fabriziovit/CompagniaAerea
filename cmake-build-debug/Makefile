@@ -203,33 +203,6 @@ main.c.s:
 	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/main.c.s
 .PHONY : main.c.s
 
-queue.obj: queue.c.obj
-
-.PHONY : queue.obj
-
-# target to build an object file
-queue.c.obj:
-	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/queue.c.obj
-.PHONY : queue.c.obj
-
-queue.i: queue.c.i
-
-.PHONY : queue.i
-
-# target to preprocess a source file
-queue.c.i:
-	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/queue.c.i
-.PHONY : queue.c.i
-
-queue.s: queue.c.s
-
-.PHONY : queue.s
-
-# target to generate assembly for a file
-queue.c.s:
-	$(MAKE) -f CMakeFiles\CompagniaAerea.dir\build.make CMakeFiles/CompagniaAerea.dir/queue.c.s
-.PHONY : queue.c.s
-
 sqlite3.obj: sqlite3.c.obj
 
 .PHONY : sqlite3.obj
@@ -275,9 +248,6 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
-	@echo ... queue.obj
-	@echo ... queue.i
-	@echo ... queue.s
 	@echo ... sqlite3.obj
 	@echo ... sqlite3.i
 	@echo ... sqlite3.s

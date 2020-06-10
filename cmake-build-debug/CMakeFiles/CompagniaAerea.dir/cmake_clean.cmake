@@ -2,7 +2,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/CompagniaAerea.dir/graph.c.obj"
   "CMakeFiles/CompagniaAerea.dir/listAeroporti.c.obj"
   "CMakeFiles/CompagniaAerea.dir/main.c.obj"
-  "CMakeFiles/CompagniaAerea.dir/queue.c.obj"
   "CMakeFiles/CompagniaAerea.dir/sqlite3.c.obj"
   "CompagniaAerea.exe"
   "CompagniaAerea.exe.manifest"
