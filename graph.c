@@ -157,9 +157,9 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
         printf("OK2\n");
         u = Find_Min(&Q);
         if(u == target)
-            while(prev[u] != NULL){
+            while(prev[u] != 0){
                 printf("OK3\n");
-                Pop(&S, u);
+                Pop(S, u);
                 u = prev[u];
                 printf("OK4\n");
         }
@@ -181,76 +181,50 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     printf("OK1112\n");
 }
 
-/*struct nodoQ {
-    int info;
-    struct nodoQ *next;
-};
-
-int estrai_min(struct nodoQ **primo, int d[]) {
-    struct nodoQ *p, *pmin, *prec=NULL, *precmin=NULL;
-    int u;
-    pmin = *primo;
-    p = *primo;
-    while (p != NULL) {
-        if ((d[p->info] != 65535 && d[p->info] < d[pmin->info]) || d[pmin->info] == 65535) {
-            pmin = p;
-            precmin = prec;
+int** TrasformaINMatrice(Graph *G){
+    int i, j;
+    int n = G->n;
+    Edge *tmp;
+    int Grafo[n][n];
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            Grafo[i][j]=65530;
         }
-        prec = p;
-        p = p->next;
     }
-    u = pmin->info;
-
-    if (precmin == NULL)
-        *primo = (*primo)->next;
-    else
-        precmin->next = pmin->next;
-    free(pmin);
-
-    return(u);
+    for(i=0;i<n;i++){
+        tmp = (Edge *) G->adj[i];
+        while(tmp != NULL){
+            Grafo[i][tmp->dbindex-1]=tmp->km;
+            tmp = tmp->next;
+        }
+    }
+    return Grafo;
 }
 
-void accoda(struct nodoQ **primo, int v) {
-    struct nodoQ *p;
-    p = malloc(sizeof(struct nodoQ));
-    p->info = v;
-    p->next = *primo;
-    *primo = p;
-    return;
-}
 
 void Dijkstra(Graph *G) {
+    int n = G->n;
+    int Grafo[n][n];
     int d[50], pi[50];
-    int n;
     int v;
     int u, s;
+    int i, j;
+    Edge *tmp;
     aeroporto q, primo;
-    Edge *e;
-    n = G->n;
-    for (v = 0; v < n; v++) {
-        d[v] = 65535;
-        pi[v] = -1;
+
+    for(i=0;i<n;i++){
+        for(j=0;j<n;j++){
+            Grafo[i][j]=65530;
+        }
     }
-
-    printf("Sorgente: ");
-    scanf("%d", &s);
-    d[s] = 0;
-
-    for (v = 0; v < n; v++)
-        accoda(&primo, v);
-
-    while (primo != NULL) {
-        u = estrai_min(&primo, d);
-        e = (Edge *) G->adj[u];
-        while (e != NULL) {
-            if (d[e->info] == 65535 || d[e->km] > d[u] + e->km) {
-                pi[p->info] = u;
-                d[p->info] = d[u] + p->w;
-            }
-            p = p->next;
+    for(i=0;i<n;i++){
+        tmp = (Edge *) G->adj[i];
+        while(tmp != NULL){
+            Grafo[i][tmp->dbindex-1]=tmp->km;
+            tmp = tmp->next;
         }
     }
 
-    for (v = 0; v < n; v++)
-        printf("d[%d] = %3d, pi[%d] = %3d\n", v, d[v], v, pi[v]);
-}*/
+    //Funzione Dijkstra
+
+}
