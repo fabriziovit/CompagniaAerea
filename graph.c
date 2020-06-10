@@ -156,9 +156,13 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     do{
         printf("OK2\n");
         u = Find_Min(&Q);
-        printf("OK3\n");
-        Pop(S, u);
-        printf("OK4\n");
+        if(u == target)
+            while(prev[u] != NULL){
+                printf("OK3\n");
+                Pop(&S, u);
+                u = prev[u];
+                printf("OK4\n");
+        }
         EliminaNodo_C(&Q, u);
         printf("OK5\n");
 
@@ -171,7 +175,7 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
                 printf("OK8\n");
             }
         }
-    }while(!CodaVuota(&Q) || u == target);
+    }while(!CodaVuota(&Q));
     printf("OK10\n");
     printSP(dist, n);
     printf("OK1112\n");
