@@ -181,27 +181,6 @@ void Dijkstra(Graph *G, int src, int target, aeroporto L) {
     printf("OK1112\n");
 }
 
-int** TrasformaINMatrice(Graph *G){
-    int i, j;
-    int n = G->n;
-    Edge *tmp;
-    int Grafo[n][n];
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            Grafo[i][j]=65530;
-        }
-    }
-    for(i=0;i<n;i++){
-        tmp = (Edge *) G->adj[i];
-        while(tmp != NULL){
-            Grafo[i][tmp->dbindex-1]=tmp->km;
-            tmp = tmp->next;
-        }
-    }
-    return Grafo;
-}
-
-
 void Dijkstra(Graph *G) {
     int n = G->n;
     int Grafo[n][n];
