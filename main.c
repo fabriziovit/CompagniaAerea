@@ -436,7 +436,7 @@ int main() {
                                 do {
                                     if ((sceltaPrenotazione > 0) && (sceltaPrenotazione < 3)) {
                                         printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
-                                        printf("1. Inserisci andata e Ritorno.\n");
+                                        printf("1. Inserisci andata e ritorno.\n");
                                         printf("2. Inserisci solo andata.\n");
                                         printf("3. Torna indietro.\n");
                                     } else {
