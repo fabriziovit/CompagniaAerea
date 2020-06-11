@@ -348,20 +348,6 @@ void AggiornaPunti(char *username, int punti){
     sqlite3_finalize(stmt);
 }
 
-int appenaAggiunto(Graph *G, aeroporto L, int index){
-    Edge *tmp;
-    tmp = (Edge *) G->adj[index];
-    int cont = 0;
-    while (tmp != NULL){
-        if(tmp->inserito == 1 ){
-            cont++;
-        }
-        tmp= tmp->next;
-    }
-    return cont;
-}
-
-
 int main() {
     char username[MAX];
     char nome[MAX], cognome[MAX];
