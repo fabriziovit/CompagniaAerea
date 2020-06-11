@@ -148,7 +148,7 @@ void printPercorso(aeroporto L, int parent[],int j, char *codicePartenza, int *p
     printPercorso(L, parent, parent[j], codicePartenza, path, count+1);
     strcpy(codicePa, trovaCodice(L, j+1));
     path[count] = j;
-    printf("%s-", codicePa);
+    printf("%s ", codicePa);
 }
 
 int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, char *username,int *punti,int tipo, int src, double *prezzo){

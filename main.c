@@ -274,7 +274,12 @@ void visualizzaPrenotazioni(char *username){
     sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
     printf("Prenotazioni effettuate:\n");
     while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-        printf("Volo da %s a %s. Prezzo pagato: %.2f\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3), sqlite3_column_double(stmt, 4));
+        if(sqlite3_column_int(stmt, 5) == 0)
+            printf("Volo da %s a %s. Prezzo pagato: %.2f\n\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3), sqlite3_column_double(stmt, 4));
+        else{
+            printf("Volo con scalo:\n");
+            printf("Volo da %s a %s.\n\n", (char*)sqlite3_column_text(stmt, 2), (char*)sqlite3_column_text(stmt, 3));
+        }
     }
     printf("\n");
     sqlite3_finalize(stmt);
