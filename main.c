@@ -483,34 +483,41 @@ int main() {
                                                                                 //10% di sconto
                                                                                 punti = punti - 150;
                                                                                 Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 1, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             } else if (punti >= 300 && punti < 450) {
                                                                                 //20% di sconto
                                                                                 punti = punti - 300;
                                                                                 Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 2, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             } else if (punti >= 450 && punti < 600) {
                                                                                 //30% di sconto
                                                                                 punti = punti - 450;
                                                                                 Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 3, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             } else if (punti >= 600 && punti < 750) {
                                                                                 //40% di sconto
                                                                                 punti = punti - 600;
                                                                                 Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 4, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             } else if (punti >= 750) {
                                                                                 //50% di sconto
                                                                                 punti = punti - 750;
                                                                                 Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 5, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             }
                                                                         }else{
                                                                             Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
+                                                                            printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                             AggiornaPunti(username, punti);
                                                                         }
                                                                     }else {
                                                                         Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
+                                                                        printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
                                                                         AggiornaPunti(username, punti);
                                                                     }
                                                                 } else
@@ -709,6 +716,7 @@ int main() {
                             case 3:
                                 //visualizzare tutte le prenotazioni effettuate
                                 visualizzaPrenotazioni(username);
+                                printf("Punti sconto disponibili sull'account: %d\n",getPunti(username));
                                 break;
                         }
                     }while(sceltaUtente != 4);
