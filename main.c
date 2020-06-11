@@ -208,7 +208,7 @@ void EffettuaRegistrazione(char username[], char nome[], char cognome[], char pa
     char *sql;
     int rc;
     sqlite3_stmt *stmt;
-    sql = "INSERT INTO UTENTI(USERNAME, PASSWORD ,NOME , COGNOME, TIPO) VALUES(?1, ?2, ?3, ?4, 'Utente', 0);";
+    sql = "INSERT INTO UTENTI(USERNAME, PASSWORD ,NOME , COGNOME, TIPO, PUNTI) VALUES(?1, ?2, ?3, ?4, 'Utente', 0);";
     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
@@ -216,9 +216,7 @@ void EffettuaRegistrazione(char username[], char nome[], char cognome[], char pa
     sqlite3_bind_text(stmt, 4, cognome, -1, SQLITE_STATIC);
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        printf("Exit");
-        sqlite3_close(db);
-        exit(-1);
+        printf("Impossibile eseguire la registrazione!\n");
     }
     sqlite3_finalize(stmt);
     printf("Registrazione effettuata correttamente!\n");
@@ -257,11 +255,17 @@ void rimuoviTratta(char *codicePartenza, char *codiceDestinazione, int indice, G
         exit(-1);
     }
     sqlite3_finalize(stmt);
-    if(sqlite3_changes(db) != 0){
+
+    if(sqlite3_changes(db) != 0 ){
         Rimuovi(G, indice, codiceDestinazione);
         printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza, codiceDestinazione);
     } else{
-        printf("Gli aeroport inseriti non hanno una tratta, controlla di aver inserito i dati corretti!\n\n");
+        if(presente(G, codiceDestinazione, indice) == 1) {
+            Rimuovi(G, indice, codiceDestinazione);
+            printf("La tratta che va dall'aeroporto %s a quello %s e` stata correttamente cancellata.\n\n", codicePartenza, codiceDestinazione);
+        }else{
+            printf("Gli aeroport inseriti non hanno una tratta, controlla di aver inserito i dati corretti!\n\n");
+        }
     }
 }
 
@@ -346,6 +350,19 @@ void AggiornaPunti(char *username, int punti){
         exit(-1);
     }
     sqlite3_finalize(stmt);
+}
+
+int contieneVolo(Graph *G,int indiceDestinazione){
+    Edge *e;
+    for(int i=0;i<G->n;i++){
+        e= (Edge *) G->adj[i];
+        while(e != NULL){
+            if(e->dbindex == indiceDestinazione+1)
+                return 1;
+            e = e->next;
+        }
+    }
+    return 0;
 }
 
 int main() {
@@ -471,59 +488,88 @@ int main() {
                                                                 if(trovaCodiceDaCitta(L, cittaDestinazione) != NULL) {
                                                                     strcpy(codiceDestinazione,trovaCodiceDaCitta(L, cittaDestinazione));
                                                                     indiceDestinazione = trovaArray(L, codiceDestinazione) - 1;
-                                                                    punti = getPunti(username);
-                                                                    if(punti>=150){
-                                                                        printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n", punti);
-                                                                        scanf("%c", &continuaPrenotazione);
-                                                                        getchar();
-                                                                        if (continuaPrenotazione == 'y') {
-                                                                            if (punti >= 150 && punti < 300) {
-                                                                                //10% di sconto
-                                                                                punti = punti - 150;
-                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 1, db);
-                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
-                                                                                AggiornaPunti(username, punti);
-                                                                            } else if (punti >= 300 && punti < 450) {
-                                                                                //20% di sconto
-                                                                                punti = punti - 300;
-                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 2, db);
-                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
-                                                                                AggiornaPunti(username, punti);
-                                                                            } else if (punti >= 450 && punti < 600) {
-                                                                                //30% di sconto
-                                                                                punti = punti - 450;
-                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 3, db);
-                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
-                                                                                AggiornaPunti(username, punti);
-                                                                            } else if (punti >= 600 && punti < 750) {
-                                                                                //40% di sconto
-                                                                                punti = punti - 600;
-                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 4, db);
-                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
-                                                                                AggiornaPunti(username, punti);
-                                                                            } else if (punti >= 750) {
-                                                                                //50% di sconto
-                                                                                punti = punti - 750;
-                                                                                Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 5, db);
-                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
+                                                                    if(contieneVolo(G, indiceDestinazione) == 1) {
+                                                                        punti = getPunti(username);
+                                                                        if (punti >= 150) {
+                                                                            printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n",
+                                                                                   punti);
+                                                                            scanf("%c", &continuaPrenotazione);
+                                                                            getchar();
+                                                                            if (continuaPrenotazione == 'y') {
+                                                                                if (punti >= 150 && punti < 300) {
+                                                                                    //10% di sconto
+                                                                                    punti = punti - 150;
+                                                                                    Dijkstra(G, indicePartenza,
+                                                                                             indiceDestinazione, L,
+                                                                                             username, &punti, 1, db);
+                                                                                    printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                           punti);
+                                                                                    AggiornaPunti(username, punti);
+                                                                                } else if (punti >= 300 &&
+                                                                                           punti < 450) {
+                                                                                    //20% di sconto
+                                                                                    punti = punti - 300;
+                                                                                    Dijkstra(G, indicePartenza,
+                                                                                             indiceDestinazione, L,
+                                                                                             username, &punti, 2, db);
+                                                                                    printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                           punti);
+                                                                                    AggiornaPunti(username, punti);
+                                                                                } else if (punti >= 450 &&
+                                                                                           punti < 600) {
+                                                                                    //30% di sconto
+                                                                                    punti = punti - 450;
+                                                                                    Dijkstra(G, indicePartenza,
+                                                                                             indiceDestinazione, L,
+                                                                                             username, &punti, 3, db);
+                                                                                    printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                           punti);
+                                                                                    AggiornaPunti(username, punti);
+                                                                                } else if (punti >= 600 &&
+                                                                                           punti < 750) {
+                                                                                    //40% di sconto
+                                                                                    punti = punti - 600;
+                                                                                    Dijkstra(G, indicePartenza,
+                                                                                             indiceDestinazione, L,
+                                                                                             username, &punti, 4, db);
+                                                                                    printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                           punti);
+                                                                                    AggiornaPunti(username, punti);
+                                                                                } else if (punti >= 750) {
+                                                                                    //50% di sconto
+                                                                                    punti = punti - 750;
+                                                                                    Dijkstra(G, indicePartenza,
+                                                                                             indiceDestinazione, L,
+                                                                                             username, &punti, 5, db);
+                                                                                    printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                           punti);
+                                                                                    AggiornaPunti(username, punti);
+                                                                                }
+                                                                            } else {
+                                                                                Dijkstra(G, indicePartenza,
+                                                                                         indiceDestinazione, L,
+                                                                                         username, &punti, 0, db);
+                                                                                printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                       punti);
                                                                                 AggiornaPunti(username, punti);
                                                                             }
-                                                                        }else{
-                                                                            Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
-                                                                            printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
+                                                                        } else {
+                                                                            Dijkstra(G, indicePartenza,
+                                                                                     indiceDestinazione, L, username,
+                                                                                     &punti, 0, db);
+                                                                            printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",
+                                                                                   punti);
                                                                             AggiornaPunti(username, punti);
                                                                         }
-                                                                    }else {
-                                                                        Dijkstra(G, indicePartenza, indiceDestinazione, L, username, &punti, 0, db);
-                                                                        printf("Punti toali raggiunti con l'acquisto del volo/i: %d\n",punti);
-                                                                        AggiornaPunti(username, punti);
-                                                                    }
+                                                                    } else
+                                                                        printf("Non c'e` nessuna tratta che collega le due citta`!\n");
                                                                 } else
                                                                     printf("La citta` di destinazione indicata non ha aeroporti! Controlla i dati inseriti.\n");
                                                             } else
                                                                 printf("La citta` di partenza indicata non ha tratte!\n");
-                                                        } else
-                                                            printf("Non esiste nessun aeroporto nella citta` indicata! Riprova inserendo i dati corretti.\n");
+                                                        } else {
+                                                            printf("Non esiste nessun aeroporto nella citta` indicata!\nRiprova inserendo i dati corretti.\n");
+                                                        }
                                                         //Tratta economica/breve
                                                         //salvataggio nel db
                                                         break;
@@ -562,6 +608,7 @@ int main() {
                                                                     km = getKm(G, codiceDestinazione, indicePartenza);
                                                                     prezzototale = km * 2.5;
                                                                     punti = getPunti(username);
+                                                                    printf("Prezzo totale: %.2f\n", prezzototale);
                                                                     if (punti >= 150) {
                                                                         printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n",
                                                                                punti);
@@ -574,7 +621,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 150;
                                                                                 //diminuzione dei punti di 150
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 300 && punti < 450) {
                                                                                 //20% di sconto
@@ -582,7 +629,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 300;
                                                                                 //diminuzione dei punti di 300
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 450 && punti < 600) {
                                                                                 //30% di sconto
@@ -590,7 +637,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 450;
                                                                                 //diminuzione dei punti di 450
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 600 && punti < 750) {
                                                                                 //40% di sconto
@@ -598,7 +645,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 600;
                                                                                 //diminuzione dei punti di 600
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 750) {
                                                                                 //50% di sconto
@@ -606,13 +653,12 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 750;
                                                                                 //diminuzione dei punti di 750
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             }
                                                                         }
                                                                     } else {
-                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\nPrezzo totale: %.2f\n",
-                                                                               prezzototale);
+                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\n");
                                                                     }
                                                                     int puntitotali = punti;
                                                                     salvaPrenotazione(username, codicePartenza,
@@ -635,14 +681,13 @@ int main() {
                                                             strcpy(codicePartenza, trovaCodiceDaCitta(L,cittaPartenza));
                                                             indicePartenza = trovaArray(L, codicePartenza)-1;
                                                             if(haTratta(G, indicePartenza) == 1){
-                                                                    if (MetaGettonata(codicePartenza) != NULL) {
-                                                                        strcpy(codiceDestinazione,
-                                                                               MetaGettonata(codicePartenza));
-                                                                        strcpy(cittaDestinazione,
-                                                                               trovaCitta(L, codiceDestinazione));
-                                                                        printf("La citta` piu gettonata al momento e` %s vuoi continuare la prenotazione? y/n\n",
-                                                                               cittaDestinazione);
-                                                                    //}
+                                                                if (MetaGettonata(codicePartenza) != NULL) {
+                                                                    strcpy(codiceDestinazione,
+                                                                           MetaGettonata(codicePartenza));
+                                                                    strcpy(cittaDestinazione,
+                                                                           trovaCitta(L, codiceDestinazione));
+                                                                    printf("La citta` piu gettonata al momento e` %s vuoi continuare la prenotazione? y/n\n",
+                                                                           cittaDestinazione);
                                                                 }else {
                                                                     strcpy(codiceDestinazione,TrovaMinKm(G, indicePartenza, L));
                                                                     strcpy(cittaDestinazione,trovaCitta(L, codiceDestinazione));
@@ -658,6 +703,7 @@ int main() {
                                                                                indicePartenza);
                                                                     prezzototale = km * 2.5;
                                                                     punti = getPunti(username);
+                                                                    printf("Prezzo totale: %.2f\n", prezzototale);
                                                                     if (punti >= 150) {
                                                                         printf("Punti disponibili: %d.\nVuoi usare i tuoi punti per ricevere un sconto? y/n\n",
                                                                                punti);
@@ -670,7 +716,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 150;
                                                                                 //diminuzione dei punti di 150
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 300 &&
                                                                                        punti < 450) {
@@ -679,7 +725,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 300;
                                                                                 //diminuzione dei punti di 300
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 450 &&
                                                                                        punti < 600) {
@@ -688,7 +734,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 450;
                                                                                 //diminuzione dei punti di 450
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 600 &&
                                                                                        punti < 750) {
@@ -697,7 +743,7 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 600;
                                                                                 //diminuzione dei punti di 600
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             } else if (punti >= 750) {
                                                                                 //50% di sconto
@@ -705,13 +751,12 @@ int main() {
                                                                                 prezzototale -= sconto;
                                                                                 punti = punti - 750;
                                                                                 //diminuzione dei punti di 750
-                                                                                printf("Nuovo prezzo con sconto: %.2f",
+                                                                                printf("Nuovo prezzo con sconto: %.2f\n",
                                                                                        prezzototale);
                                                                             }
                                                                         }
                                                                     } else {
-                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\nPrezzo totale: %.2f\n",
-                                                                               prezzototale);
+                                                                        printf("Non disponi di abbastanza punti per ricevere uno sconto.\n");
                                                                     }
                                                                     int puntitotali = punti;
                                                                     salvaPrenotazione(username, codicePartenza,
@@ -843,7 +888,6 @@ int main() {
                 break;
         }
     }while (scelta != 3);
-    saveToDatabase(&L, G);
     free(G);
     free(L);
     sqlite3_close(db);

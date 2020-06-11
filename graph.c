@@ -154,6 +154,7 @@ void printPercorso(aeroporto L, int parent[],int j, char *codicePartenza, int *p
 int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, char *username,int *punti,int tipo, int src, double *prezzo){
     char codicePartenza[10], codiceDestinazione[10];
     double sconto;
+    int trovato = 0;
     int *path = malloc(n*sizeof(int));
     for(int i=0;i<n;i++){
         path[i] = n+1;
@@ -161,6 +162,7 @@ int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, cha
     printf("VOLO\t\t DISTANZA\t\tPERCORSO");
     for (int i = 1; i < n; i++){
         if(target == i) {
+            trovato = 1;
             *prezzo = dist[i]*2.5;
             if(tipo == 1){
                 sconto = 0.1 * (*prezzo);
@@ -186,8 +188,7 @@ int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, cha
             (*punti) += dist[i]/15;
         }
     }
-
-    return path;
+        return path;
 }
 
 //Funzione Dijkstra
