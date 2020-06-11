@@ -119,7 +119,7 @@ char *TrovaMinKm(Graph *G,int index, aeroporto L){
 int haTratta(Graph *G, int index){
     Edge *e;
     e = (Edge *) G->adj[index];
-    if(e->next)
+    if(e)
         return 1;
     else
         return 0;
