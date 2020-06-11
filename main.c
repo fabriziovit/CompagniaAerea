@@ -527,8 +527,8 @@ int main() {
                                             do {
                                                 if ((sceltaTipo > 0) && (sceltaTipo < 3)) {
                                                     printf("Scegli una delle seguenti funzioni, inserendo il numero della funzione:\n");
-                                                    printf("1. Tratta piu` economica.\n");
-                                                    printf("2. Meta` piu` gettonata.\n");
+                                                    printf("1. Meta piu` economica.\n");
+                                                    printf("2. Meta piu` gettonata.\n");
                                                     printf("3. Annulla prenotazione.\n");
                                                 } else {
                                                     printf("Riprova! Hai inserito un numero non valido.\n");
@@ -545,7 +545,7 @@ int main() {
                                                             if(haTratta(G, indicePartenza) == 1) {
                                                                 strcpy(codiceDestinazione,TrovaMinKm(G, indicePartenza, L));
                                                                 strcpy(cittaDestinazione,trovaCitta(L, codiceDestinazione));
-                                                                printf("La citta` piu gettonata al momento e` %s vuoi continuare la prenotazione? y/n\n",cittaDestinazione);
+                                                                printf("La citta` piu' economica al momento e` %s vuoi continuare la prenotazione? y/n\n",cittaDestinazione);
                                                                 scanf("%c", &continuaPrenotazione);
                                                                 getchar();
                                                                 if (continuaPrenotazione == 'y') {

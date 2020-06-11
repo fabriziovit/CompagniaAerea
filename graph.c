@@ -190,7 +190,6 @@ int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, cha
     return path;
 }
 
-//Funzione Dijkstra
 void Dijkstra(Graph *G, int src, int target, aeroporto L, char *username, int *punti, int tipo, sqlite3 *db) {
     int n = G->n;
     int Grafo[n][n];
