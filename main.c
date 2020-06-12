@@ -445,6 +445,7 @@ int main() {
                         switch (sceltaUtente) {
                             case 1:
                                 //Visualizzare i voli
+                                printList(L);
                                 stampaVoli(G, L);
                                 break;
                             case 2:
