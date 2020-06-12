@@ -607,7 +607,7 @@ int main() {
                                                                 getchar();
                                                                 if (continuaPrenotazione == 'y') {
                                                                     km = getKm(G, codiceDestinazione, indicePartenza);
-                                                                    prezzototale = km * 2.5;
+                                                                    prezzototale = km * 0.1;
                                                                     punti = getPunti(username);
                                                                     printf("Prezzo totale: %.2f\n", prezzototale);
                                                                     if (punti >= 150) {
@@ -664,7 +664,7 @@ int main() {
                                                                     int puntitotali = punti;
                                                                     salvaPrenotazione(username, codicePartenza,
                                                                                       codiceDestinazione, prezzototale);
-                                                                    punti = (km / 15);
+                                                                    punti = (km / 20);
                                                                     puntitotali += punti;
                                                                     printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n", punti, puntitotali);
                                                                     AggiornaPunti(username, puntitotali);
@@ -702,7 +702,7 @@ int main() {
                                                                             trovaArray(L, codicePartenza) - 1;
                                                                     km = getKm(G, codiceDestinazione,
                                                                                indicePartenza);
-                                                                    prezzototale = km * 2.5;
+                                                                    prezzototale = km * 0.1;
                                                                     punti = getPunti(username);
                                                                     printf("Prezzo totale: %.2f\n", prezzototale);
                                                                     if (punti >= 150) {
@@ -763,7 +763,7 @@ int main() {
                                                                     salvaPrenotazione(username, codicePartenza,
                                                                                       codiceDestinazione,
                                                                                       prezzototale);
-                                                                    punti = (km / 15);
+                                                                    punti = (km / 20);
                                                                     puntitotali += punti;
                                                                     printf("Punti aggiunti all'account: %d\nPunti totali disponibili: %d\n",
                                                                            punti, puntitotali);

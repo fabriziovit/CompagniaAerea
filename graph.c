@@ -163,7 +163,7 @@ int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, cha
     for (int i = 1; i < n; i++){
         if(target == i) {
             trovato = 1;
-            *prezzo = dist[i]*2.5;
+            *prezzo = dist[i]*0.1;
             if(tipo == 1){
                 sconto = 0.1 * (*prezzo);
                 *prezzo -= sconto;
@@ -185,7 +185,7 @@ int *printSolution(aeroporto L, int dist[], int n, int parent[], int target, cha
             printf("\n%s -> %s\t\t%d\t\t%s ",codicePartenza, codiceDestinazione, dist[i], codicePartenza);
             printPercorso(L, parent, i, codicePartenza, path, 0);
             printf("\n");
-            (*punti) += dist[i]/15;
+            (*punti) += dist[i]/20;
         }
     }
         return path;
